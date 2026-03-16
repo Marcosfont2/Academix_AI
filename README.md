@@ -1,5 +1,5 @@
 # Academix AI
-O Academix AI é uma plataforma de analytics de alto nível voltada para o ecossistema acadêmico. Utilizando Inteligência Artificial Generativa e Preditiva, o sistema processa currículos e dados institucionais para oferecer insights estratégicos. Ele permite que estudantes de graduação e pré-vestibulandos identifiquem "polos de excelência" em nichos específicos e prevejam o sucesso de suas trajetórias com base em dados reais de currículos acadêmicos e trajetórias acadêmicas.
+O Academix AI é uma plataforma de analytics de alto nível voltada para o ecossistema acadêmico. Utilizando Inteligência Artificial Generativa e Preditiva, o sistema processa currículos e dados institucionais para oferecer insights estratégicos. Ele permite que nichos específicos apresentem suas trajetórias com base em dados reais de currículos acadêmicos e trajetórias acadêmicas.
 
 Ele analisa padrões em milhares de trajetórias acadêmicas para responder perguntas complexas:
 
@@ -9,7 +9,6 @@ Ele analisa padrões em milhares de trajetórias acadêmicas para responder perg
 
 # Funcionalidades (Casos de Uso)
 
-Análise e Predição (Casos 1 a 6)
 UC01 – *Dashboard de Métricas Visuais*: Conversão de currículos textuais em gráficos de radar de competências e mapas de calor de produtividade.
 
 UC02 – *Motor de Busca por "Polos de Força"*: Busca inteligente que identifica quais faculdades ou linhas de pesquisa são líderes reais em temas específicos (ex: Visão Computacional, Segurança da Informação).
@@ -23,6 +22,7 @@ UC05 – *Análise de Gap de Competência*: Identificação automática do que f
 UC06 - *Roadmap Dinâmico*: Uma linha do tempo gerada automaticamente que se ajusta conforme adicionada a conclusão de novas etapas acadêmicas.
 
 UC07 - *Mapa de Calor de Competências*: Uma visualização interativa que destaca os pontos fortes e as áreas de conhecimento que o aluno precisa "esquentar" para atingir sua meta.
+
 
 
 # Tecnologias Utilizadas
