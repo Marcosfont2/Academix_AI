@@ -28,6 +28,10 @@ UC08 - *Timeline de produções*: Em que anos o professor publicou mais e em qua
 
 UC09 - *Relação de defesas*: Em quais bancas o professor já participou e métricas de quais professores estiveram presentes.
 
+## Diagrama de Classes 
+
+<img src="images/UML diagram.png" alt="Dashboard Academix" width="500">
+
 ## 💻 Tecnologias Utilizadas
 
 *Front-end*:
@@ -54,4 +58,4 @@ Bancos de Dados a serem utilizados:
 - Thiago Raquel
 - Yuri Maximiliano
 
-*Disciplina*: Engenharia de Software
+*Disciplina*: Engenharia de Software - 35M56
