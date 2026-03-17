@@ -28,9 +28,49 @@ UC08 - *Timeline de produções*: Em que anos o professor publicou mais e em qua
 
 UC09 - *Relação de defesas*: Em quais bancas o professor já participou e métricas de quais professores estiveram presentes.
 
-## Diagrama de Classes 
+## Diagrama de Classes (UML) 
 
 ![Modelagem de diagrama simplificado de classes](images/UML_diagram.png)
+
+Bom salientar que organizei a relação de dependência da forma que achei conveniente. Assim, por óbvio, é possível alterar a depender dos problemas durante a implementação ou coisas dessa natureza.
+
+Vou colocar uma descrição abaixo para facilitar o entendimento das relações de dependências por mim sugeridas:
+
+1. **Herança (Generalização)**
+
+    *Símbolo:* Uma linha sólida com uma ponta de seta em triângulo vazio (<|--).
+
+    *Significado:* Indica que uma classe "é um tipo de" outra. A classe filha herda todos os atributos e métodos da classe pai.
+
+    *Aplicação no projeto:* Usuario <|-- Estudante. Significa que o Estudante herda propriedades básicas de login e perfil, mas possui funções específicas para consulta de IA.
+
+2. **Realização (Interface)**
+
+    *Símbolo:* Uma linha tracejada com uma ponta de seta em triângulo vazio (<|..).
+
+    *Significado:* Indica que uma classe implementa um contrato definido por uma interface.
+
+    *Aplicação no projeto:* IProcessadorIA <|.. MotorIA. Garante que o Motor de IA realizará as funções de predição exigidas pelo sistema, independentemente de qual modelo (OpenAI ou outro) esteja por trás.
+
+3. **Associação com Multiplicidade**
+
+    Símbolo: Uma linha sólida simples (--).
+
+    Significado: Indica uma relação estrutural persistente entre dois objetos.
+
+    *Multiplicidade:*
+
+     "1" -- "1": Relação exclusiva (ex: um Estudante possui um Currículo).
+
+     "1" -- "*": Um objeto está ligado a vários outros (ex: um Estudante pode ter várias Conquistas no Roadmap).
+
+4. **Dependência**
+
+    *Símbolo:* Uma linha tracejada com uma ponta de seta aberta (..>).
+
+    *Significado:* Indica uma relação mais fraca de "uso". Uma classe depende da outra para realizar uma operação momentânea, mas não a contém permanentemente.
+
+    *Aplicação no projeto:* MotorIA ..> Curriculo. O Motor de IA precisa ler os dados do Currículo para gerar o insight, mas não "é dono" do currículo.
 
 ## 💻 Tecnologias Utilizadas
 
