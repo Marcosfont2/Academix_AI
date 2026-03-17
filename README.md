@@ -1,4 +1,5 @@
 # Academix AI
+
 O Academix AI é uma plataforma de analytics de alto nível voltada para o ecossistema acadêmico. Utilizando Inteligência Artificial Generativa e Preditiva, o sistema processa currículos e dados institucionais para oferecer insights estratégicos. Ele permite que nichos específicos apresentem suas trajetórias com base em dados reais de currículos acadêmicos e trajetórias acadêmicas.
 
 Ele analisa padrões em milhares de trajetórias acadêmicas para responder perguntas complexas:
@@ -21,6 +22,11 @@ UC05 – *Análise de Gap de Competência*: Identificação automática do que f
 
 UC06 - *Roadmap Dinâmico*: Uma linha do tempo gerada automaticamente que se ajusta conforme adicionada a conclusão de novas etapas acadêmicas.
 
+UC07 - *Rede de colaboração de pesquisa*: O sistema gera um grafo de visualização para a rede de contatos dos professores entre co-autores, frequência de publicações e alunos.
+
+UC08 - *Timeline de produções*: Em que anos o professor publicou mais e em quais temas.
+
+UC09 - *Relação de defesas*: Em quais bancas o professor já participou e métricas de quais professores estiveram presentes.
 
 ## Tecnologias Utilizadas
 
@@ -36,7 +42,7 @@ A estrutura de serviços pode ser montada em Python (FastAPI) (Aqui preferencial
 
 O armazenamento utiliza PostgreSQL (recomendo) com a extensão pgvector, permitindo que a IA realize buscas semânticas rápidas para encontrar perfis e instituições similares.
 
-## Informações adicionais 
+## Informações adicionais
 
 Bancos de Dados a serem utilizados:
 
@@ -45,7 +51,7 @@ Bancos de Dados a serem utilizados:
 ## Autores/Disciplina
 
 - Marcos Fontes
-- Thiago Raquel 
+- Thiago Raquel
 - Yuri Maximiliano
 
 *Disciplina*: Engenharia de Software
