@@ -1,1 +1,41 @@
+classDiagram
+    class Estudante {
+        +String nome
+        +String email
+        +String objetivoAcademico
+        +consultarIA(pergunta)
+        +verificarViabilidade(meta)
+    }
 
+    class Curriculo {
+        +List~String~ experiencias
+        +List~String~ publicacoes
+        +float indiceProdutividade
+        +gerarMapaCalor()
+        +calcularMetricas()
+    }
+
+    class Instituicao {
+        +String nome
+        +List~String~ linhasPesquisa
+        +int rankingImpacto
+        +getPoloDeForça()
+    }
+
+    class MotorIA {
+        +analisarAderencia(curriculo, edital)
+        +predizerSucesso(curriculo, meta)
+        +recomendarCaminho(perfil)
+    }
+
+    class Conquista {
+        +String titulo
+        +DateTime dataGanho
+        +exibirBadge()
+    }
+
+    Estudante "1" -- "1" Curriculo : possui
+    Estudante "1" -- "*" Conquista : alcanca
+    MotorIA ..> Curriculo : analisa
+    MotorIA ..> Instituicao : compara
+    Curriculo "*" -- "1" Instituicao : vinculado_a
