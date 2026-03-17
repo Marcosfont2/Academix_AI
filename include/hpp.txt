@@ -1,15 +1,48 @@
 classDiagram
-    class Estudante {
+    %% Interfaces (Contratos de Comportamento)
+    class IProcessadorIA {
+        <<interface>>
+        +analisarTexto(string texto)
+        +gerarPredicao(dados)
+    }
+
+    class IVisualizavel {
+        <<interface>>
+        +getDadosGrafico() JSON
+    }
+
+    %% Classes Abstratas (Generalização)
+    class Usuario {
+        <<abstract>>
         +String nome
         +String email
+        +login()
+        +logout()
+    }
+
+    class EntidadeAcademica {
+        <<abstract>>
+        +String id
+        +String localizacao
+        +getMembros()
+    }
+
+    %% Classes Reais (Implementações)
+    class Estudante {
         +String objetivoAcademico
         +consultarIA(pergunta)
         +verificarViabilidade(meta)
     }
 
+    class Professor {
+        +String ID_Lattes
+        +List coAutores
+        +gerarGrafoColaboracao()
+    }
+
     class Curriculo {
-        +List~String~ experiencias
-        +List~String~ publicacoes
+        +List experiencias
+        +List publicacoes
         +float indiceProdutividade
         +gerarMapaCalor()
         +calcularMetricas()
@@ -17,7 +50,7 @@ classDiagram
 
     class Instituicao {
         +String nome
-        +List~String~ linhasPesquisa
+        +List linhasPesquisa
         +int rankingImpacto
         +getPoloDeForça()
     }
@@ -26,6 +59,7 @@ classDiagram
         +analisarAderencia(curriculo, edital)
         +predizerSucesso(curriculo, meta)
         +recomendarCaminho(perfil)
+        +analisarGapCompetencia()
     }
 
     class Conquista {
@@ -34,8 +68,18 @@ classDiagram
         +exibirBadge()
     }
 
+    %% Relacionamentos e Hierarquia
+    Usuario <|-- Estudante : Herda de
+    Usuario <|-- Professor : Herda de
+    EntidadeAcademica <|-- Instituicao : Herda de
+
+    IProcessadorIA <|.. MotorIA : Implementa
+    IVisualizavel <|.. Curriculo : Implementa (UC01)
+    IVisualizavel <|.. Instituicao : Implementa (UC04)
+
     Estudante "1" -- "1" Curriculo : possui
     Estudante "1" -- "*" Conquista : alcanca
+    Curriculo "*" -- "1" Instituicao : vinculado_a
+    
     MotorIA ..> Curriculo : analisa
     MotorIA ..> Instituicao : compara
-    Curriculo "*" -- "1" Instituicao : vinculado_a
