@@ -10,21 +10,21 @@ Ele analisa padrões em milhares de trajetórias acadêmicas para responder perg
 
 ## ✨✨ Funcionalidades (Casos de Uso)
 
-UC01 – *Dashboard de Métricas Visuais*: Conversão de currículos textuais em gráficos de radar de competências e mapas de calor de produtividade. 🚀🚀
+UC01 – *Dashboard de Métricas Visuais*: Conversão de currículos textuais em gráficos de radar de competências e mapas de calor de produtividade. 📊📊
 
-UC02 – *Motor de Busca por "Polos de Força"*: Busca inteligente que identifica quais faculdades ou linhas de pesquisa são líderes reais em temas específicos (ex: Visão Computacional, Segurança da Informação).
+UC02 – *Motor de Busca por "Polos de Força"*: Busca inteligente que identifica quais faculdades ou linhas de pesquisa são líderes reais em temas específicos (ex: Visão Computacional, Segurança da Informação). 🚀🚀
 
-UC03 – *Preditor de Trajetória (IA)*: A IA analisa o currículo do aluno e sugere o "próximo melhor passo" com base em perfis de sucesso similares. (Aqui achei uma boa ideia, mas tem que ver...)
+UC03 – *Preditor de Trajetória (IA)*: A IA analisa o currículo do aluno e sugere o "próximo melhor passo" com base em perfis de sucesso similares. (Aqui achei uma boa ideia, mas tem que ver...) 🔥🔥
 
-UC04 – *Comparador de Ecossistemas*: Funcionalidade que coloca duas instituições lado a lado, comparando a produção científica real (por exemplo).
+UC04 – *Comparador de Ecossistemas*: Funcionalidade que coloca duas instituições lado a lado, comparando a produção científica real (por exemplo). ⚖️⚖️
 
 UC05 – *Análise de Gap de Competência*: Identificação automática do que falta no currículo do aluno para atingir um objetivo específico (ex: uma vaga de intercâmbio). (Aqui também só coloquei o que pensei, temos que discutir...)
 
-UC06 - *Roadmap Dinâmico*: Uma linha do tempo gerada automaticamente que se ajusta conforme adicionada a conclusão de novas etapas acadêmicas.
+UC06 - *Roadmap Dinâmico*: Uma linha do tempo gerada automaticamente que se ajusta conforme adicionada a conclusão de novas etapas acadêmicas. 🛣️🛣️
 
 UC07 - *Rede de colaboração de pesquisa*: O sistema gera um grafo de visualização para a rede de contatos dos professores entre co-autores, frequência de publicações e alunos.
 
-UC08 - *Timeline de produções*: Em que anos o professor publicou mais e em quais temas.
+UC08 - *Timeline de produções*: Em que anos o professor publicou mais e em quais temas. ⏱️⏱️
 
 UC09 - *Relação de defesas*: Em quais bancas o professor já participou e métricas de quais professores estiveram presentes.
 
