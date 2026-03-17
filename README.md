@@ -30,7 +30,7 @@ UC09 - *Relação de defesas*: Em quais bancas o professor já participou e mét
 
 ## Diagrama de Classes 
 
-<img src="images/UML diagram.png" alt="Dashboard Academix" width="500">
+![Texto Alternativo](images/UML diagram.png)
 
 ## 💻 Tecnologias Utilizadas
 
