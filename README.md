@@ -1,16 +1,16 @@
-# Academix AI
+# 👓👓 Academix AI
 
 O Academix AI é uma plataforma de analytics de alto nível voltada para o ecossistema acadêmico. Utilizando Inteligência Artificial Generativa e Preditiva, o sistema processa currículos e dados institucionais para oferecer insights estratégicos. Ele permite que nichos específicos apresentem suas trajetórias com base em dados reais de currículos acadêmicos e trajetórias acadêmicas.
 
 Ele analisa padrões em milhares de trajetórias acadêmicas para responder perguntas complexas:
 
-"Qual universidade possui o maior índice de publicação em Visão Computacional nos últimos 2 anos?"
+"Qual universidade possui o maior índice de publicação em Visão Computacional nos últimos 2 anos?" 🗣️🔥
 
-"Com base no meu perfil atual, qual a probabilidade de aprovação em um mestrado na instituição X?" (To conjecturando...)
+"Com base no meu perfil atual, qual a probabilidade de aprovação em um mestrado na instituição X?" ❓❓ (To conjecturando...) 
 
-## Funcionalidades (Casos de Uso)
+## ✨✨ Funcionalidades (Casos de Uso)
 
-UC01 – *Dashboard de Métricas Visuais*: Conversão de currículos textuais em gráficos de radar de competências e mapas de calor de produtividade.
+UC01 – *Dashboard de Métricas Visuais*: Conversão de currículos textuais em gráficos de radar de competências e mapas de calor de produtividade. 🚀🚀
 
 UC02 – *Motor de Busca por "Polos de Força"*: Busca inteligente que identifica quais faculdades ou linhas de pesquisa são líderes reais em temas específicos (ex: Visão Computacional, Segurança da Informação).
 
@@ -28,7 +28,7 @@ UC08 - *Timeline de produções*: Em que anos o professor publicou mais e em qua
 
 UC09 - *Relação de defesas*: Em quais bancas o professor já participou e métricas de quais professores estiveram presentes.
 
-## Tecnologias Utilizadas
+## 💻💻 Tecnologias Utilizadas
 
 *Front-end*:
 
