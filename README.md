@@ -41,3 +41,11 @@ O armazenamento utiliza PostgreSQL (recomendo) com a extensão pgvector, permiti
 Bancos de Dados a serem utilizados:
 
 <http://bi.cnpq.br/painel/formacao-atuacao-lattes/>
+
+## Autores/Disciplina
+
+- Marcos Fontes
+- Thiago Raquel 
+- Yuri Maximiliano
+
+*Disciplina*: Engenharia de Software
