@@ -1,0 +1,1 @@
+Onde você cria os endpoints (URLs) para o Next.js chamar.

@@ -1,1 +1,10 @@
 /.venv
+openalex_br_2024_full.csv
+PAINEL_LATTES.csv
+INSTITUICOES_OPENALEX.csv
+CAPES.csv
+# Bloquear datasets e backups
+*.csv
+*.sql
+# Se tiver uma pasta específica para eles:
+caminho/para/sua/pasta/de/dados/
