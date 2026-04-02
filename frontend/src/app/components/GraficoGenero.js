@@ -23,7 +23,7 @@ export default function GraficoGenero() {
         Distribuição de Pesquisadores por Gênero
       </h2>
       
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height={350}>
         <PieChart>
           <Pie
             data={dados}
