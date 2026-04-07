@@ -1,16 +1,18 @@
 package com.lattes.backend.domain.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 
-@Data // O Lombok já cria os Getters e Setters automaticamente para você!
+@Data
 @Entity
 @Table(name = "lattes_painel")
 public class LattesPainel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Toda tabela JPA precisa de um ID
+    private Long id; // Agora é só o ID, sem a anotação de geração automática!
 
     @Column(name = "sexo")
     private String sexo;
