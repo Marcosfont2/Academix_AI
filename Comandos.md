@@ -11,3 +11,8 @@ cd backend
 
 cd frontend
 npm run dev
+
+usuario1: 
+Thiago Raquel
+thiaguinho2005@yahoo.com.br
+123456
