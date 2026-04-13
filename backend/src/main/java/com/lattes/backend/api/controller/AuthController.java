@@ -33,4 +33,19 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/{id}/upload-curriculo")
+    public ResponseEntity<String> upload(@PathVariable Long id, @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        try {
+            service.salvarCurriculoXml(id, file);
+            return ResponseEntity.ok("Currículo atualizado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao processar arquivo.");
+        }
+    }
+
+    @GetMapping("/{id}/curriculo")
+    public ResponseEntity<String> getCurriculo(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarCurriculo(id));
+    }
 }

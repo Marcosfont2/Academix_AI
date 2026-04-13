@@ -1,5 +1,6 @@
 'use client';
 
+import CurriculoManager from './components/CurriculoManager';
 import Link from 'next/link';
 import Navbar from './components/Navbar';
 import GraficoGenero from './components/GraficoGenero';
@@ -26,6 +27,7 @@ export default function Home() {
       <div style={{ marginBottom: '40px' }}>
          <LattesUpload />
       </div>
+      <CurriculoManager />
       
       {/* Grid para os gráficos ficarem organizados */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>

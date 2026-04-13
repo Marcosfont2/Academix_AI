@@ -16,3 +16,8 @@ usuario1:
 Thiago Raquel
 thiaguinho2005@yahoo.com.br
 123456
+
+usuario2:
+Ana Souza
+thiaguinhomedeiros05@gmail.com
+654321

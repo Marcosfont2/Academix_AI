@@ -121,3 +121,5 @@ Bancos de Dados a serem utilizados:
 - Yuri Maximiliano
 
 *Disciplina*: Engenharia de Software - 35M56
+
+Bom, acho que podemos tentar ir para o caso de uso de recomendação por IA. Como acha melhor prosseguirmos com isso então? Fazemos uma recomendação automática por IA ou uma recomendação em que o próprio usuário faz a pergunta (na vdd eu n lembro bem como é o caso de uso de IA e estou meio indeciso, então acho que vou aceitar o que você achar melhor). Além disso vamos aproveitar e fazer primeiro a página separada para os casos de uso né

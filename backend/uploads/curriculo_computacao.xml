@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<curriculo>
+    <nome>Thiago Raquel</nome>
+    <curso>Ciência da Computação</curso>
+    <resumo>Estudante focado em Engenharia de Software e Inteligência Artificial. Experiência com Java, Spring Boot e Next.js.</resumo>
+    <projetos>Desenvolvimento do Academix AI, Chatbot com API do Gemini.</projetos>
+</curriculo>

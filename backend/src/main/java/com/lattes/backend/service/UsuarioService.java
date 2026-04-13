@@ -33,4 +33,17 @@ public class UsuarioService {
         }
         return repository.save(novoUsuario);
     }
+
+    public void salvarCurriculoXml(Long userId, org.springframework.web.multipart.MultipartFile arquivo) throws Exception {
+        // Lê todos os bytes do arquivo e transforma em String
+        String conteudo = new String(arquivo.getBytes(), java.nio.charset.StandardCharsets.UTF_8);
+        
+        atualizarCurriculo(userId, conteudo);
+    }
+
+    public String buscarCurriculo(Long userId) {
+        return repository.findById(userId)
+            .map(Usuario::getCurriculoTexto)
+            .orElse("Currículo não encontrado.");
+    }
 }
