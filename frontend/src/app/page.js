@@ -1,42 +1,96 @@
 'use client';
 
-import CurriculoManager from './components/CurriculoManager';
-import Link from 'next/link';
+import { useState } from 'react';
 import Navbar from './components/Navbar';
-import GraficoGenero from './components/GraficoGenero';
-import LattesUpload from './components/LattesUpload'; 
-import GraficoTopInstituicoes from './components/GraficoTopInstituicoes';
-import GraficoTiposArtigo from './components/GraficoTiposArtigo';
-import GraficoAreasConhecimento from './components/GraficoAreasConhecimento';
+import CurriculoManager from './components/CurriculoManager';
+import DashboardGraficos from './components/DashboardGraficos';
+import ConselheiroIA from './components/ConselheiroIA';
 
 export default function Home() {
-  return (
-    <main style={{ padding: '40px', maxWidth: '900px', margin: '0 auto' }}>
-      <Navbar /> {/* A barra agora gerencia o login sozinha */}
-      <h1 style={{ textAlign: 'center', color: '#111' }}>Dashboard Academix AI</h1>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
-        <Link href="/login" style={{ padding: '10px 20px', backgroundColor: '#333', color: '#fff', textDecoration: 'none', borderRadius: '5px', fontWeight: 'bold' }}>
-          👤 Fazer Login / Perfil
-        </Link>
-      </div>
-      <p style={{ textAlign: 'center', color: '#666', marginBottom: '40px' }}>
-        Análise de dados de alto nível da plataforma Lattes e OpenAlex.
-      </p>
+  // O Estado que controla qual aba está ativa (começa no 'perfil')
+  const [abaAtiva, setAbaAtiva] = useState('perfil');
 
-      {/* Botão de Upload no topo */}
-      <div style={{ marginBottom: '40px' }}>
-         <LattesUpload />
-      </div>
-      <CurriculoManager />
+  // Função que decide o que renderizar no meio da tela
+  const renderizarConteudo = () => {
+    switch (abaAtiva) {
+      case 'perfil':
+        return <CurriculoManager />;
+      case 'graficos':
+        return <DashboardGraficos />;
+      case 'ia':
+        return <ConselheiroIA />;
+      default:
+        return <CurriculoManager />;
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f4f7f6' }}>
       
-      {/* Grid para os gráficos ficarem organizados */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
-        <GraficoGenero />
-        <GraficoTopInstituicoes />
-        <GraficoTiposArtigo />
-        <GraficoAreasConhecimento />
-      </div>
-      
-    </main>
+      {/* ================= BARRA LATERAL (SIDEBAR) ================= */}
+      <aside style={{ 
+        width: '250px', 
+        backgroundColor: '#1a1c23', 
+        color: '#fff', 
+        display: 'flex', 
+        flexDirection: 'column' 
+      }}>
+        <div style={{ padding: '20px', fontSize: '22px', fontWeight: 'bold', borderBottom: '1px solid #2d313c', textAlign: 'center' }}>
+          🎓 Academix AI
+        </div>
+        
+        <nav style={{ display: 'flex', flexDirection: 'column', padding: '20px 0' }}>
+          
+          <button 
+            onClick={() => setAbaAtiva('perfil')}
+            style={estiloBotaoSidebar(abaAtiva === 'perfil')}
+          >
+            👤 Meu Perfil
+          </button>
+          
+          <button 
+            onClick={() => setAbaAtiva('graficos')}
+            style={estiloBotaoSidebar(abaAtiva === 'graficos')}
+          >
+            📊 Dados Básicos
+          </button>
+          
+          <button 
+            onClick={() => setAbaAtiva('ia')}
+            style={estiloBotaoSidebar(abaAtiva === 'ia')}
+          >
+            🤖 Conselheiro IA
+          </button>
+
+        </nav>
+      </aside>
+
+      {/* ================= ÁREA DE CONTEÚDO PRINCIPAL ================= */}
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        
+        {/* Mantemos a sua Navbar no topo para mostrar o nome do usuário e o botão Sair */}
+        <Navbar /> 
+        
+        <div style={{ padding: '30px', overflowY: 'auto' }}>
+          {/* Aqui é onde a mágica acontece! O componente muda dinamicamente */}
+          {renderizarConteudo()}
+        </div>
+        
+      </main>
+    </div>
   );
 }
+
+// Função auxiliar para pintar o botão da barra lateral dependendo se ele está ativo ou não
+const estiloBotaoSidebar = (ativo) => ({
+  padding: '15px 25px',
+  backgroundColor: ativo ? '#0070f3' : 'transparent',
+  color: ativo ? '#fff' : '#a0a5b1',
+  border: 'none',
+  textAlign: 'left',
+  fontSize: '16px',
+  cursor: 'pointer',
+  transition: 'background 0.2s',
+  borderLeft: ativo ? '4px solid #fff' : '4px solid transparent',
+  marginBottom: '5px'
+});
