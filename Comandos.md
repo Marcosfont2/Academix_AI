@@ -21,3 +21,5 @@ usuario2:
 Ana Souza
 thiaguinhomedeiros05@gmail.com
 654321
+
+gemini.api.key=AQ.Ab8RN6LdsTBmRmE-Y73PkijfkDHu0YU_BMrN6LYsvwR7DRoreQ
