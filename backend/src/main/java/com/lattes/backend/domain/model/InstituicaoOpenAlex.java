@@ -19,4 +19,8 @@ public class InstituicaoOpenAlex {
 
     @Column(name = "works_count")
     private Integer worksCount;
+
+    // Nova coluna adicionada!
+    @Column(name = "cited_by_count")
+    private Integer citedByCount;
 }

@@ -5,18 +5,19 @@ import Navbar from './components/Navbar';
 import CurriculoManager from './components/CurriculoManager';
 import DashboardGraficos from './components/DashboardGraficos';
 import ConselheiroIA from './components/ConselheiroIA';
+import ComparacaoUniversidades from './components/ComparacaoUniversidades'; // 1. Importa o novo componente
 
 export default function Home() {
-  // O Estado que controla qual aba está ativa (começa no 'perfil')
   const [abaAtiva, setAbaAtiva] = useState('perfil');
 
-  // Função que decide o que renderizar no meio da tela
   const renderizarConteudo = () => {
     switch (abaAtiva) {
       case 'perfil':
         return <CurriculoManager />;
       case 'graficos':
         return <DashboardGraficos />;
+      case 'comparacao': // 2. Adiciona o caso no Switch
+        return <ComparacaoUniversidades />;
       case 'ia':
         return <ConselheiroIA />;
       default:
@@ -54,6 +55,14 @@ export default function Home() {
           >
             📊 Dados Básicos
           </button>
+
+          {/* 3. O Novo Botão da Sidebar */}
+          <button 
+            onClick={() => setAbaAtiva('comparacao')}
+            style={estiloBotaoSidebar(abaAtiva === 'comparacao')}
+          >
+            ⚖️ Comparar Instituições
+          </button>
           
           <button 
             onClick={() => setAbaAtiva('ia')}
@@ -68,11 +77,9 @@ export default function Home() {
       {/* ================= ÁREA DE CONTEÚDO PRINCIPAL ================= */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         
-        {/* Mantemos a sua Navbar no topo para mostrar o nome do usuário e o botão Sair */}
         <Navbar /> 
         
         <div style={{ padding: '30px', overflowY: 'auto' }}>
-          {/* Aqui é onde a mágica acontece! O componente muda dinamicamente */}
           {renderizarConteudo()}
         </div>
         
@@ -81,7 +88,6 @@ export default function Home() {
   );
 }
 
-// Função auxiliar para pintar o botão da barra lateral dependendo se ele está ativo ou não
 const estiloBotaoSidebar = (ativo) => ({
   padding: '15px 25px',
   backgroundColor: ativo ? '#0070f3' : 'transparent',
