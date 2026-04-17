@@ -23,6 +23,12 @@ public class InstituicaoController {
 
     @GetMapping("/top-publicacoes")
     public ResponseEntity<List<InstituicaoTopDTO>> getTopPublicacoes() {
-        return ResponseEntity.ok(service.getTop10Instituicoes());
+        List<InstituicaoTopDTO> dados = service.getTop10Instituicoes();
+        
+        if (dados == null || dados.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.ok(dados);
     }
 }

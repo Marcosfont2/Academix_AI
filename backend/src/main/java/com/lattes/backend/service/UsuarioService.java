@@ -4,6 +4,7 @@ import com.lattes.backend.domain.model.Usuario;
 import com.lattes.backend.domain.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import com.lattes.backend.infra.exception.EntidadeNaoEncontradaException;
 
 @Service
 public class UsuarioService {
@@ -20,10 +21,18 @@ public class UsuarioService {
     }
 
     public void atualizarCurriculo(Long userId, String novoTexto) {
-        repository.findById(userId).ifPresent(u -> {
-            u.setCurriculoTexto(novoTexto);
-            repository.save(u);
-        });
+        Usuario usuario = repository.findById(userId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com ID " + userId + " não encontrado."));
+        
+        usuario.setCurriculoTexto(novoTexto);
+        repository.save(usuario);
+    }
+
+    public String buscarCurriculo(Long userId) {
+        Usuario usuario = repository.findById(userId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com ID " + userId + " não encontrado."));
+        
+        return usuario.getCurriculoTexto();
     }
 
     public Usuario registrar(Usuario novoUsuario) {
@@ -41,9 +50,5 @@ public class UsuarioService {
         atualizarCurriculo(userId, conteudo);
     }
 
-    public String buscarCurriculo(Long userId) {
-        return repository.findById(userId)
-            .map(Usuario::getCurriculoTexto)
-            .orElse("Currículo não encontrado.");
-    }
+
 }

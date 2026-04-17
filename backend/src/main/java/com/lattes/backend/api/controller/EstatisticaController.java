@@ -23,6 +23,12 @@ public class EstatisticaController {
 
     @GetMapping("/genero")
     public ResponseEntity<List<GeneroPorcentagemDTO>> getPorcentagemGenero() {
-        return ResponseEntity.ok(service.calcularPorcentagemPorGenero());
+        List<GeneroPorcentagemDTO> dados = service.calcularPorcentagemPorGenero();
+        
+        if (dados == null || dados.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.ok(dados);
     }
 }

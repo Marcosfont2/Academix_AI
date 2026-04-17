@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
+import com.lattes.backend.infra.exception.EntidadeNaoEncontradaException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,14 +28,18 @@ public class ConselheiroIAService {
         this.restTemplate = new RestTemplate();
     }
 
+    @SuppressWarnings("unchecked")
     public String gerarConselhoCarreira(Long userId) {
-        // 1. Busca o usuário e o currículo no banco de dados
-        Optional<Usuario> usuarioOpt = repository.findById(userId);
-        if (usuarioOpt.isEmpty() || usuarioOpt.get().getCurriculoTexto() == null) {
-            return "Por favor, envie o seu currículo na aba 'Meu Perfil' primeiro.";
+        // 1. Busca o usuário com tratamento de erro
+        Usuario usuario = repository.findById(userId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário não encontrado. Impossível gerar conselho."));
+
+        // Se o usuário existir, mas não tiver currículo, também tratamos como recurso não encontrado
+        if (usuario.getCurriculoTexto() == null) {
+            throw new EntidadeNaoEncontradaException("Nenhum currículo encontrado para este usuário. Faça o upload na aba 'Meu Perfil' primeiro.");
         }
 
-        String curriculo = usuarioOpt.get().getCurriculoTexto();
+        String curriculo = usuario.getCurriculoTexto();
 
         // 2. Monta o Prompt Mestre (Instruções para a IA)
         String prompt = "Você é um conselheiro acadêmico sênior, amigável e encorajador. " +

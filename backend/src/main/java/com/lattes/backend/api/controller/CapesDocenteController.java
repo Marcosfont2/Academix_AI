@@ -23,6 +23,12 @@ public class CapesDocenteController {
 
     @GetMapping("/areas")
     public ResponseEntity<List<AreaConhecimentoDTO>> getAreas() {
-        return ResponseEntity.ok(service.getTopAreasConhecimento());
+        List<AreaConhecimentoDTO> dados = service.getTopAreasConhecimento();
+        
+        if (dados == null || dados.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.ok(dados);
     }
 }

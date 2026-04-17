@@ -23,6 +23,12 @@ public class ArtigoController {
 
     @GetMapping("/tipos")
     public ResponseEntity<List<PublicacaoPorTipoDTO>> getTipos() {
-        return ResponseEntity.ok(service.getDistribuicaoPorTipo());
+        List<PublicacaoPorTipoDTO> dados = service.getDistribuicaoPorTipo();
+        
+        if (dados == null || dados.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.ok(dados);
     }
 }
