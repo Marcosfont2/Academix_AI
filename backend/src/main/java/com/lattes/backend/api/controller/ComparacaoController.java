@@ -4,6 +4,7 @@ import com.lattes.backend.api.dto.ComparacaoUniversidadeDTO;
 import com.lattes.backend.service.ComparacaoUniversidadeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/comparacao")
@@ -27,5 +28,12 @@ public class ComparacaoController {
         }
         
         return ResponseEntity.ok(dados);
+    }
+
+    // Adicione este método na classe
+    @GetMapping("/sugestoes")
+    public ResponseEntity<List<String>> buscarSugestoes(@RequestParam String termo) {
+        List<String> sugestoes = service.buscarSugestoes(termo);
+        return ResponseEntity.ok(sugestoes);
     }
 }

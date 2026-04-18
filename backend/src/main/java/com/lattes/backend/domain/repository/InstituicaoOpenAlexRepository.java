@@ -14,6 +14,11 @@ public interface InstituicaoOpenAlexRepository extends JpaRepository<Instituicao
     
     List<InstituicaoOpenAlex> findTop10ByOrderByWorksCountDesc();
 
+    @Query(value = "SELECT DISTINCT display_name FROM instituicoes_openalex " +
+               "WHERE display_name ILIKE CONCAT('%', :termo, '%') " +
+               "LIMIT 10", nativeQuery = true)
+    List<String> buscarSugestoesLimpas(@Param("termo") String termo);
+
     // Mudamos de Optional para List para evitar o erro de múltiplos resultados
     @Query("SELECT o FROM InstituicaoOpenAlex o WHERE o.displayName ILIKE %:nome% ORDER BY o.worksCount DESC")
     List<InstituicaoOpenAlex> buscarPorNome(@Param("nome") String nome);

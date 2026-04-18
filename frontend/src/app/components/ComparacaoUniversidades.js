@@ -1,9 +1,82 @@
 "use client";
 
-import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
-import { BookOpen, Users, GraduationCap, Award } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BookOpen, Users, GraduationCap, Award, Search } from 'lucide-react';
 
+// =========================================================================
+// 1. COMPONENTE DE BUSCA DINÂMICA
+// =========================================================================
+const BuscadorUniversidade = ({ label, corHex, valor, setValor }) => {
+  const [termo, setTermo] = useState(valor);
+  const [sugestoes, setSugestoes] = useState([]);
+  const [mostrarLista, setMostrarLista] = useState(false);
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(async () => {
+      // Só busca se tiver 3 ou mais letras e se o termo for diferente do que já está selecionado
+      if (termo.length >= 3 && termo !== valor) {
+        try {
+          const res = await fetch(`http://localhost:8080/api/comparacao/sugestoes?termo=${encodeURIComponent(termo)}`);
+          if (res.ok) {
+            const data = await res.json();
+            setSugestoes(data);
+            setMostrarLista(true);
+          }
+        } catch (err) {
+          console.error("Erro ao buscar sugestões", err);
+        }
+      } else {
+        setSugestoes([]);
+        setMostrarLista(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [termo, valor]);
+
+  const selecionarSugestao = (nome) => {
+    setTermo(nome);
+    setValor(nome); // Atualiza o estado da tela principal
+    setMostrarLista(false);
+  };
+
+  return (
+    <div className="relative w-full">
+      <label className="block text-sm font-semibold mb-2" style={{ color: corHex }}>{label}</label>
+      <div className="relative">
+        <input
+          type="text"
+          value={termo}
+          onChange={(e) => setTermo(e.target.value)}
+          onFocus={() => termo.length >= 3 && setMostrarLista(true)}
+          placeholder="Digite o nome da instituição..."
+          className="w-full p-3 pl-10 rounded-lg border border-slate-200 focus:ring-2 outline-none transition-all"
+          style={{ focusRing: corHex }}
+        />
+        <Search className="absolute left-3 top-3 text-slate-400" size={20} />
+      </div>
+
+      {mostrarLista && sugestoes.length > 0 && (
+        <ul className="absolute z-20 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+          {sugestoes.map((sugestao, idx) => (
+            <li 
+              key={idx} 
+              onClick={() => selecionarSugestao(sugestao)}
+              className="p-3 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-0 text-sm text-slate-700"
+            >
+              {sugestao}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+// =========================================================================
+// 2. TELA PRINCIPAL DE COMPARAÇÃO
+// =========================================================================
 export default function ComparacaoUniversidades() {
   const [univA, setUnivA] = useState('Universidade Federal do Rio de Janeiro');
   const [univB, setUnivB] = useState('Universidade Federal de São Paulo');
@@ -12,19 +85,10 @@ export default function ComparacaoUniversidades() {
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState(null);
 
-  // Lista pré-definida para facilitar o teste
-  const listaUniversidades = [
-    "Universidade Federal do Rio de Janeiro",
-    "Universidade Federal de São Paulo",
-    "Universidade de São Paulo",
-    "Universidade Federal do Rio Grande do Norte"
-  ];
-
   const buscarDados = async () => {
     setLoading(true);
     setErro(null);
     try {
-      // Faz as duas requisições ao mesmo tempo (Promise.all é mais rápido!)
       const [resA, resB] = await Promise.all([
         fetch(`http://localhost:8080/api/comparacao?universidade=${encodeURIComponent(univA)}`),
         fetch(`http://localhost:8080/api/comparacao?universidade=${encodeURIComponent(univB)}`)
@@ -32,7 +96,6 @@ export default function ComparacaoUniversidades() {
 
       if (!resA.ok || !resB.ok) throw new Error("Erro ao buscar dados na API.");
 
-      // Trata o nosso famoso 204 No Content
       const dataA = resA.status === 204 ? null : await resA.json();
       const dataB = resB.status === 204 ? null : await resB.json();
 
@@ -45,17 +108,17 @@ export default function ComparacaoUniversidades() {
     }
   };
 
-  // Função auxiliar para juntar dados das duas faculdades no mesmo gráfico
+  // Função já corrigida para suportar nomes de universidades idênticos
   const mesclarDadosDemografia = (listaA, listaB) => {
     const mapa = new Map();
     
     listaA?.forEach(item => {
-      mapa.set(item.categoria, { nome: item.categoria, [univA]: item.porcentagem });
+      mapa.set(item.categoria, { nome: item.categoria, valorA: item.porcentagem });
     });
     
     listaB?.forEach(item => {
       const existente = mapa.get(item.categoria) || { nome: item.categoria };
-      existente[univB] = item.porcentagem;
+      existente.valorB = item.porcentagem;
       mapa.set(item.categoria, existente);
     });
 
@@ -66,39 +129,35 @@ export default function ComparacaoUniversidades() {
     <div className="p-8 min-h-screen bg-slate-50 text-slate-800">
       <div className="max-w-7xl mx-auto">
         
-        {/* CABEÇALHO E CONTROLES */}
+        {/* CABEÇALHO E CONTROLES DE BUSCA */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-6 text-center">Painel Comparativo de Instituições</h1>
           
-          <div className="flex flex-col md:flex-row gap-4 items-end justify-center">
-            <div className="w-full md:w-1/3">
-              <label className="block text-sm font-semibold text-indigo-600 mb-2">Instituição A (Azul)</label>
-              <select 
-                value={univA} 
-                onChange={(e) => setUnivA(e.target.value)}
-                className="w-full p-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-              >
-                {listaUniversidades.map(u => <option key={u} value={u}>{u}</option>)}
-              </select>
+          <div className="flex flex-col md:flex-row gap-6 items-end justify-center">
+            <div className="w-full md:w-2/5">
+              <BuscadorUniversidade 
+                label="Instituição A (Azul)" 
+                corHex="#6366f1" 
+                valor={univA} 
+                setValor={setUnivA} 
+              />
             </div>
 
-            <div className="w-full md:w-1/3">
-              <label className="block text-sm font-semibold text-emerald-600 mb-2">Instituição B (Verde)</label>
-              <select 
-                value={univB} 
-                onChange={(e) => setUnivB(e.target.value)}
-                className="w-full p-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
-              >
-                {listaUniversidades.map(u => <option key={u} value={u}>{u}</option>)}
-              </select>
+            <div className="w-full md:w-2/5">
+              <BuscadorUniversidade 
+                label="Instituição B (Verde)" 
+                corHex="#10b981" 
+                valor={univB} 
+                setValor={setUnivB} 
+              />
             </div>
 
             <button 
               onClick={buscarDados}
               disabled={loading}
-              className="w-full md:w-auto px-8 py-3 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition-all disabled:opacity-50"
+              className="w-full md:w-1/5 px-8 py-3 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition-all disabled:opacity-50 h-[48px]"
             >
-              {loading ? "Processando..." : "Comparar Dados"}
+              {loading ? "Processando..." : "Comparar"}
             </button>
           </div>
           {erro && <p className="text-red-500 text-center mt-4 font-medium">{erro}</p>}
@@ -108,7 +167,7 @@ export default function ComparacaoUniversidades() {
         {dadosA && dadosB && (
           <div className="space-y-8 animate-in fade-in duration-500">
             
-            {/* CARDS DE IMPACTO GERAL (KPIs) */}
+            {/* CARDS DE IMPACTO GERAL */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Card Univ A */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-t-indigo-500">
@@ -171,8 +230,8 @@ export default function ComparacaoUniversidades() {
                       <YAxis axisLine={false} tickLine={false} tickFormatter={(value) => `${value}%`} />
                       <Tooltip cursor={{fill: '#f1f5f9'}} formatter={(value) => `${value}%`} />
                       <Legend iconType="circle" />
-                      <Bar dataKey={univA} name="Inst. A" fill="#6366f1" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey={univB} name="Inst. B" fill="#10b981" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="valorA" name={univA} fill="#6366f1" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="valorB" name={univB} fill="#10b981" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -189,8 +248,8 @@ export default function ComparacaoUniversidades() {
                       <YAxis axisLine={false} tickLine={false} tickFormatter={(value) => `${value}%`} />
                       <Tooltip cursor={{fill: '#f1f5f9'}} formatter={(value) => `${value}%`} />
                       <Legend iconType="circle" />
-                      <Bar dataKey={univA} name="Inst. A" fill="#6366f1" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey={univB} name="Inst. B" fill="#10b981" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="valorA" name={univA} fill="#6366f1" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="valorB" name={univB} fill="#10b981" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
