@@ -230,8 +230,8 @@ export default function ComparacaoUniversidades() {
                       <YAxis axisLine={false} tickLine={false} tickFormatter={(value) => `${value}%`} />
                       <Tooltip cursor={{fill: '#f1f5f9'}} formatter={(value) => `${value}%`} />
                       <Legend iconType="circle" />
-                      <Bar dataKey="valorA" name={univA} fill="#6366f1" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="valorB" name={univB} fill="#10b981" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="valorA" name={dadosA.nomeUniversidade} fill="#6366f1" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="valorB" name={dadosB.nomeUniversidade} fill="#10b981" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -248,8 +248,8 @@ export default function ComparacaoUniversidades() {
                       <YAxis axisLine={false} tickLine={false} tickFormatter={(value) => `${value}%`} />
                       <Tooltip cursor={{fill: '#f1f5f9'}} formatter={(value) => `${value}%`} />
                       <Legend iconType="circle" />
-                      <Bar dataKey="valorA" name={univA} fill="#6366f1" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="valorB" name={univB} fill="#10b981" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="valorA" name={dadosA.nomeUniversidade} fill="#6366f1" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="valorB" name={dadosB.nomeUniversidade} fill="#10b981" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

@@ -12,13 +12,11 @@ Ele analisa padrões em milhares de trajetórias acadêmicas para responder perg
 
 UC01 – Dashboard de Métricas: Gráficos gerais do Lattes e OpenAlex. (Concluído)
 
-Foco atual:
+UC02 – Gestão de Perfil (Substitui o Roadmap): Sistema de Registro/Login e funcionalidade de upload/armazenamento do texto do currículo do aluno no banco de dados. (Concluído)
 
-UC02 – Gestão de Perfil (Substitui o Roadmap): Sistema de Registro/Login e funcionalidade de upload/armazenamento do texto do currículo do aluno no banco de dados.
+UC03 – Comparador de Ecossistemas: Dois inputs com auto-completar para selecionar universidades e gerar gráficos comparativos lado a lado. (Concluído)
 
-UC03 – Comparador de Ecossistemas: Dois inputs com auto-completar para selecionar universidades e gerar gráficos comparativos lado a lado.
-
-UC04 – Preditor de Trajetória / Conselheiro IA: Chatbot integrado à API do Gemini que lê o currículo salvo no UC06 e responde dúvidas do usuário sobre próximos passos de carreira. (Podemos fundir o UC05 aqui dentro como um "modo" da IA).
+UC04 – Preditor de Trajetória / Conselheiro IA: Chatbot integrado à API do Gemini que lê o currículo salvo no UC06 e responde dúvidas do usuário sobre próximos passos de carreira. (Podemos fundir o UC05 aqui dentro como um "modo" da IA). (Concluído)
 
 
 

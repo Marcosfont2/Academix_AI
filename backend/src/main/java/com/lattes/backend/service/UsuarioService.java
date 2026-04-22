@@ -10,9 +10,12 @@ import com.lattes.backend.infra.exception.EntidadeNaoEncontradaException;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
+    private final EmailService emailService; // 1. Declarando a injeção de dependência
 
-    public UsuarioService(UsuarioRepository repository) {
+    // 2. Injetando no construtor
+    public UsuarioService(UsuarioRepository repository, EmailService emailService) {
         this.repository = repository;
+        this.emailService = emailService;
     }
 
     public Optional<Usuario> autenticar(String email, String senha) {
@@ -25,7 +28,10 @@ public class UsuarioService {
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com ID " + userId + " não encontrado."));
         
         usuario.setCurriculoTexto(novoTexto);
-        repository.save(usuario);
+        repository.save(usuario); // Salva o texto no banco
+        
+        // NOVO: Dispara o e-mail confirmando o upload com sucesso
+        emailService.enviarEmailAtualizacaoCurriculo(usuario.getEmail(), usuario.getNome());
     }
 
     public String buscarCurriculo(Long userId) {
@@ -40,7 +46,14 @@ public class UsuarioService {
         if (repository.findByEmail(novoUsuario.getEmail()).isPresent()) {
             throw new IllegalArgumentException("E-mail já cadastrado!");
         }
-        return repository.save(novoUsuario);
+        
+        // 3. Salva no banco de dados primeiro
+        Usuario usuarioSalvo = repository.save(novoUsuario);
+        
+        // 4. Dispara o e-mail de boas-vindas usando os dados salvos
+        emailService.enviarEmailBoasVindas(usuarioSalvo.getEmail(), usuarioSalvo.getNome());
+        
+        return usuarioSalvo;
     }
 
     public void salvarCurriculoXml(Long userId, org.springframework.web.multipart.MultipartFile arquivo) throws Exception {
@@ -49,6 +62,4 @@ public class UsuarioService {
         
         atualizarCurriculo(userId, conteudo);
     }
-
-
 }

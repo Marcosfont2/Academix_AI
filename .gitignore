@@ -6,5 +6,4 @@ CAPES.csv
 # Bloquear datasets e backups
 *.csv
 *.sql
-# Se tiver uma pasta específica para eles:
-caminho/para/sua/pasta/de/dados/
+application-secret.properties
