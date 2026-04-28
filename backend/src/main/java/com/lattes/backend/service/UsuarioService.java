@@ -1,9 +1,13 @@
 package com.lattes.backend.service;
 
+import com.lattes.backend.api.dto.UsuarioPublicoDTO;
 import com.lattes.backend.domain.model.Usuario;
 import com.lattes.backend.domain.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.List;
+
 import com.lattes.backend.infra.exception.EntidadeNaoEncontradaException;
 
 @Service
@@ -61,5 +65,32 @@ public class UsuarioService {
         String conteudo = new String(arquivo.getBytes(), java.nio.charset.StandardCharsets.UTF_8);
         
         atualizarCurriculo(userId, conteudo);
+    }
+
+    public List<UsuarioPublicoDTO> listarUsuariosPublicos() {
+    return repository.findAll().stream()
+        .map(u -> {
+            String textoOriginal = u.getCurriculoTexto();
+            String resumo = "Pesquisador no Academix AI"; // Valor padrão
+
+            if (textoOriginal != null && !textoOriginal.isBlank()) {
+                // Limpa possíveis tags XML que sobraram para a bio ficar limpa
+                String textoLimpo = textoOriginal.replaceAll("<[^>]*>", " ").trim();
+                
+                // Pega os primeiros 150 caracteres com segurança
+                resumo = textoLimpo.length() > 150 
+                    ? textoLimpo.substring(0, 150) + "..." 
+                    : textoLimpo;
+            }
+
+            return new UsuarioPublicoDTO(u.getId(), u.getNome(), resumo);
+        })
+        .collect(Collectors.toList());
+    }
+
+    public String buscarNomeUsuario(Long id) {
+        return repository.findById(id)
+            .map(u -> u.getNome())
+            .orElse("Pesquisador");
     }
 }

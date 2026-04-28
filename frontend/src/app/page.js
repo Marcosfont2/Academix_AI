@@ -5,18 +5,34 @@ import Navbar from './components/Navbar';
 import CurriculoManager from './components/CurriculoManager';
 import DashboardGraficos from './components/DashboardGraficos';
 import ConselheiroIA from './components/ConselheiroIA';
-import ComparacaoUniversidades from './components/ComparacaoUniversidades'; // 1. Importa o novo componente
+import ComparacaoUniversidades from './components/ComparacaoUniversidades';
+import Explorar from './components/Explorar';
+import PerfilPublico from './components/PerfilPublico';
 
 export default function Home() {
   const [abaAtiva, setAbaAtiva] = useState('perfil');
+  const [perfilSelecionadoId, setPerfilSelecionadoId] = useState(null);
 
   const renderizarConteudo = () => {
     switch (abaAtiva) {
       case 'perfil':
         return <CurriculoManager />;
+        
+      case 'explorar':
+        return <Explorar onVerPerfil={(idClicado) => {
+            setPerfilSelecionadoId(idClicado);
+            setAbaAtiva('perfil-publico'); // Muda a aba automaticamente
+        }} />;
+        
+      case 'perfil-publico':
+        return <PerfilPublico 
+            usuarioId={perfilSelecionadoId} 
+            onVoltar={() => setAbaAtiva('explorar')} // Se clicar em voltar, retorna pro grid
+        />;
+
       case 'graficos':
         return <DashboardGraficos />;
-      case 'comparacao': // 2. Adiciona o caso no Switch
+      case 'comparacao':
         return <ComparacaoUniversidades />;
       case 'ia':
         return <ConselheiroIA />;
@@ -48,6 +64,13 @@ export default function Home() {
           >
             👤 Meu Perfil
           </button>
+
+          <button 
+            onClick={() => setAbaAtiva('explorar')}
+            style={estiloBotaoSidebar(abaAtiva === 'explorar')}
+          >
+            🌍 Explorar Rede
+          </button>
           
           <button 
             onClick={() => setAbaAtiva('graficos')}
@@ -56,7 +79,6 @@ export default function Home() {
             📊 Dados Básicos
           </button>
 
-          {/* 3. O Novo Botão da Sidebar */}
           <button 
             onClick={() => setAbaAtiva('comparacao')}
             style={estiloBotaoSidebar(abaAtiva === 'comparacao')}

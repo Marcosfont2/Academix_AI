@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Roadmap({ userId }) {
+// 1. Adicionamos o readOnly aqui em cima, com o valor padrão false
+export default function Roadmap({ userId, readOnly = false }) {
     const [eventos, setEventos] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -52,60 +53,64 @@ export default function Roadmap({ userId }) {
 
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-10">
+            
             {/* --- SEÇÃO 1: FORMULÁRIO DE ADIÇÃO --- */}
-            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
-                <h2 className="text-xl font-extrabold text-black mb-4">Adicionar Nova Conquista</h2>
-                <form onSubmit={handleSalvarAtividade} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    
-                    <div className="col-span-1">
-                        <label className="block text-sm font-bold text-black">Ano</label>
-                        <input type="number" required
-                            className="mt-1 w-full p-2 border border-gray-400 rounded-md text-black bg-white font-medium"
-                            value={novaAtividade.ano}
-                            onChange={(e) => setNovaAtividade({ ...novaAtividade, ano: Number(e.target.value) })}
-                        />
-                    </div>
+            {/* 2. Colocamos a condição !readOnly envolvendo a div principal do formulário */}
+            { !readOnly && (
+                <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
+                    <h2 className="text-xl font-extrabold text-black mb-4">Adicionar Nova Conquista</h2>
+                    <form onSubmit={handleSalvarAtividade} className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        
+                        <div className="col-span-1">
+                            <label className="block text-sm font-bold text-black">Ano</label>
+                            <input type="number" required
+                                className="mt-1 w-full p-2 border border-gray-400 rounded-md text-black bg-white font-medium"
+                                value={novaAtividade.ano}
+                                onChange={(e) => setNovaAtividade({ ...novaAtividade, ano: Number(e.target.value) })}
+                            />
+                        </div>
 
-                    <div className="col-span-1">
-                        <label className="block text-sm font-bold text-black">Tipo</label>
-                        <select 
-                            className="mt-1 w-full p-2 border border-gray-400 rounded-md text-black bg-white font-medium"
-                            value={novaAtividade.tipo}
-                            onChange={(e) => setNovaAtividade({ ...novaAtividade, tipo: e.target.value })}
-                        >
-                            <option value="Curso">Curso</option>
-                            <option value="Projeto de Pesquisa">Projeto de Pesquisa</option>
-                            <option value="Congresso">Congresso</option>
-                            <option value="Premiação">Premiação</option>
-                            <option value="Projeto Acadêmico">Projeto Acadêmico</option>
-                        </select>
-                    </div>
+                        <div className="col-span-1">
+                            <label className="block text-sm font-bold text-black">Tipo</label>
+                            <select 
+                                className="mt-1 w-full p-2 border border-gray-400 rounded-md text-black bg-white font-medium"
+                                value={novaAtividade.tipo}
+                                onChange={(e) => setNovaAtividade({ ...novaAtividade, tipo: e.target.value })}
+                            >
+                                <option value="Curso">Curso</option>
+                                <option value="Projeto de Pesquisa">Projeto de Pesquisa</option>
+                                <option value="Congresso">Congresso</option>
+                                <option value="Premiação">Premiação</option>
+                                <option value="Projeto Acadêmico">Projeto Acadêmico</option>
+                            </select>
+                        </div>
 
-                    <div className="col-span-2">
-                        <label className="block text-sm font-bold text-black">Título</label>
-                        <input type="text" required placeholder="Ex: Especialização em IA"
-                            className="mt-1 w-full p-2 border border-gray-400 rounded-md text-black bg-white font-medium placeholder-gray-500"
-                            value={novaAtividade.titulo}
-                            onChange={(e) => setNovaAtividade({ ...novaAtividade, titulo: e.target.value })}
-                        />
-                    </div>
+                        <div className="col-span-2">
+                            <label className="block text-sm font-bold text-black">Título</label>
+                            <input type="text" required placeholder="Ex: Especialização em IA"
+                                className="mt-1 w-full p-2 border border-gray-400 rounded-md text-black bg-white font-medium placeholder-gray-500"
+                                value={novaAtividade.titulo}
+                                onChange={(e) => setNovaAtividade({ ...novaAtividade, titulo: e.target.value })}
+                            />
+                        </div>
 
-                    <div className="col-span-1 md:col-span-4">
-                        <label className="block text-sm font-bold text-black">Descrição (Opcional)</label>
-                        <textarea rows="2" placeholder="Detalhes sobre a conquista..."
-                            className="mt-1 w-full p-2 border border-gray-400 rounded-md text-black bg-white font-medium placeholder-gray-500"
-                            value={novaAtividade.descricao}
-                            onChange={(e) => setNovaAtividade({ ...novaAtividade, descricao: e.target.value })}
-                        />
-                    </div>
+                        <div className="col-span-1 md:col-span-4">
+                            <label className="block text-sm font-bold text-black">Descrição (Opcional)</label>
+                            <textarea rows="2" placeholder="Detalhes sobre a conquista..."
+                                className="mt-1 w-full p-2 border border-gray-400 rounded-md text-black bg-white font-medium placeholder-gray-500"
+                                value={novaAtividade.descricao}
+                                onChange={(e) => setNovaAtividade({ ...novaAtividade, descricao: e.target.value })}
+                            />
+                        </div>
 
-                    <div className="col-span-1 md:col-span-4 flex justify-end mt-2">
-                        <button type="submit" className="bg-blue-600 text-white font-bold px-6 py-2 rounded shadow hover:bg-blue-700 transition">
-                            Adicionar ao Roadmap
-                        </button>
-                    </div>
-                </form>
-            </div>
+                        <div className="col-span-1 md:col-span-4 flex justify-end mt-2">
+                            <button type="submit" className="bg-blue-600 text-white font-bold px-6 py-2 rounded shadow hover:bg-blue-700 transition">
+                                Adicionar ao Roadmap
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
 
             {/* --- SEÇÃO 2: A LINHA DO TEMPO VISUAL --- */}
             <div>

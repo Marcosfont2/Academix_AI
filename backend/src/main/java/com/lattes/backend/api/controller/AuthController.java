@@ -3,6 +3,7 @@ package com.lattes.backend.api.controller;
 import com.lattes.backend.api.dto.AtividadeManualDTO;
 import com.lattes.backend.api.dto.EventoTimelineDTO;
 import com.lattes.backend.api.dto.LoginDTO;
+import com.lattes.backend.api.dto.UsuarioPublicoDTO;
 import com.lattes.backend.domain.model.Usuario;
 import com.lattes.backend.service.UsuarioService;
 import com.lattes.backend.service.RoadmapService; // 1. Import do novo Service
@@ -72,5 +73,15 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erro ao salvar atividade.");
         }
+    }
+
+    @GetMapping("/explorar")
+    public ResponseEntity<List<UsuarioPublicoDTO>> explorarUsuarios() {
+        return ResponseEntity.ok(service.listarUsuariosPublicos());
+    }
+
+    @GetMapping("/{id}/nome")
+    public ResponseEntity<String> getNome(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarNomeUsuario(id));
     }
 }

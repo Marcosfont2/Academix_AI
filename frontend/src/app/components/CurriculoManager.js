@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Roadmap from './Roadmap'; // <-- IMPORTANTE: Ajuste este caminho dependendo de onde salvou o Roadmap.js
+import Roadmap from './Roadmap';
 
 export default function CurriculoManager() {
   const [usuario, setUsuario] = useState(null);
@@ -43,10 +43,6 @@ export default function CurriculoManager() {
       if (res.ok) {
         alert("Upload concluído!");
         fetchCurriculo(usuario.id);
-        
-        // Dica: Como o Roadmap busca do banco ao abrir a tela, 
-        // recarregar a página aqui garante que a timeline atualize 
-        // logo após o upload do novo XML.
         window.location.reload(); 
       }
     } catch (err) {
@@ -59,13 +55,12 @@ export default function CurriculoManager() {
   if (!usuario) return <p style={{ color: '#000' }}>Faça login para gerenciar seu currículo.</p>;
 
   return (
-    // Container Pai usando Flexbox para colocar os itens lado a lado
     <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
       
-      {/* --- COLUNA ESQUERDA: Seu código original de Upload --- */}
+      {/* --- COLUNA ESQUERDA: Agora com 50% do espaço --- */}
       <div style={{ 
-        flex: '1', 
-        minWidth: '300px', // Garante que não fique esmagado em telas pequenas
+        flex: '1', // <-- Mantido como 1
+        minWidth: '300px', 
         padding: '20px', 
         border: '1px solid #ddd', 
         borderRadius: '8px', 
@@ -93,6 +88,7 @@ export default function CurriculoManager() {
           {carregando && <span style={{ color: '#000', display: 'block', marginTop: '10px' }}> Processando...</span>}
         </div>
 
+        {/* Aumentei um pouco o maxHeight aqui para aproveitar o novo espaço vertical se necessário */}
         <div style={{ 
           backgroundColor: '#f9f9f9', 
           padding: '15px', 
@@ -100,8 +96,8 @@ export default function CurriculoManager() {
           whiteSpace: 'pre-wrap', 
           border: '1px solid #eee',
           minHeight: '100px',
-          maxHeight: '300px', // Coloquei um limite de altura para não empurrar a tela toda pra baixo
-          overflowY: 'auto'  // Adiciona barra de rolagem se o XML for gigante
+          maxHeight: '500px', // <-- Aumentado de 300px para 500px
+          overflowY: 'auto'  
         }}>
           <strong style={{ color: '#000' }}>Conteúdo Salvo no Banco:</strong>
           <p style={{ 
@@ -116,9 +112,11 @@ export default function CurriculoManager() {
         </div>
       </div>
 
-      {/* --- COLUNA DIREITA: O novo Roadmap Dinâmico --- */}
-      <div style={{ flex: '2', minWidth: '400px' }}>
-        {/* Passamos o usuario.id para o componente saber de quem puxar os dados */}
+      {/* --- COLUNA DIREITA: Agora com 50% do espaço --- */}
+      <div style={{ 
+        flex: '1', // <-- MUDOU DE '2' PARA '1'
+        minWidth: '300px' // <-- MUDOU DE '400px' PARA '300px' para garantir simetria
+      }}>
         <Roadmap userId={usuario.id} />
       </div>
 
