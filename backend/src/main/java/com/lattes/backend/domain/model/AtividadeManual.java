@@ -1,56 +1,34 @@
 package com.lattes.backend.domain.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "atividades_manuais")
 public class AtividadeManual {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatiza a criação do ID
     private Long id;
 
     // A chave estrangeira que liga essa atividade ao usuário dono dela
     @Column(name = "usuario_id", nullable = false)
     private Long usuarioId;
 
+    // Sem Column pois o nome do campo já é "ano", que é o mesmo nome da coluna na tabela, então o JPA mapeia automaticamente
     private Integer ano;
     
     private String tipo; // Ex: "Curso", "Congresso", "Projeto de Pesquisa"
     
     private String titulo;
     
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT") // Permite armazenar descrições mais longas
     private String descricao;
-
-    // Construtor vazio exigido pelo JPA/Hibernate
-    public AtividadeManual() {
-    }
-
-    public AtividadeManual(Long usuarioId, Integer ano, String tipo, String titulo, String descricao) {
-        this.usuarioId = usuarioId;
-        this.ano = ano;
-        this.tipo = tipo;
-        this.titulo = titulo;
-        this.descricao = descricao;
-    }
-
-    // Getters e Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Long getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
-
-    public Integer getAno() { return ano; }
-    public void setAno(Integer ano) { this.ano = ano; }
-
-    public String getTipo() { return tipo; }
-    public void setTipo(String tipo) { this.tipo = tipo; }
-
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
-
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
 }

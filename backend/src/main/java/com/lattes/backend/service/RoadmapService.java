@@ -31,13 +31,14 @@ public class RoadmapService {
 
     // Método que salva o que vem do formulário do React
     public void salvarAtividadeManual(Long userId, AtividadeManualDTO dto) {
-        AtividadeManual novaAtividade = new AtividadeManual(
-            userId,
-            dto.ano(),
-            dto.tipo(),
-            dto.titulo(),
-            dto.descricao()
-        );
+        // Usando o padrão Builder para criar a nova atividade manual de forma mais legível
+        AtividadeManual novaAtividade = AtividadeManual.builder()
+            .usuarioId(userId)
+            .ano(dto.ano())
+            .tipo(dto.tipo())
+            .titulo(dto.titulo())
+            .descricao(dto.descricao())
+            .build();
         atividadeManualRepository.save(novaAtividade);
     }
 

@@ -45,7 +45,7 @@ capes_docentes
 "- **ds_categoria_docente**: `text`" "PERMANENTE"
 "- **ds_tipo_vinculo_docente_ies**: `text`" "SERVIDOR PÚBLICO"
 "- **ds_regime_trabalho**: `text`" "DEDICAÇÃO EXCLUSIVA"
-"- **cd_cat_bolsa_produtividade**: `text`" 2 ou [null]
+"- **cd_cat_bolsa_produtividade**: `text`" 2 | [null]
 "- **in_doutor**: `text`" "S"
 "- **an_titulacao**: `bigint`" 2013
 "- **nm_grau_titulacao**: `text`" "DOUTORADO"
@@ -133,4 +133,28 @@ openalex_artigos
 "- **instituicoes**: `text`" "Great Lakes Bioenergy Research Center; Energy Center of Wisconsin; Villanova University; University of North Carolina at Charlotte; Vanderbilt University; Vanderbilt University; Great Lakes Bioenergy Research Center; Energy Center of Wisconsin; Zhejiang University; South China Agricultural University; Vanderbilt University; Qingdao National Laboratory for Marine Science and Technology; Shandong University of Science and Technology; Great Lakes Bioenergy Research Center; Energy Center of Wisconsin; Howard Hughes Medical Institute; Vanderbilt University; University of California, Berkeley; Great Lakes Bioenergy Research Center; Energy Center of Wisconsin; University of Colorado Anschutz Medical Campus; Great Lakes Bioenergy Research Center; Energy Center of Wisconsin; Great Lakes Bioenergy Research Center; Energy Center of Wisconsin; Energy Center of Wisconsin; Universidade Nova de Lisboa; Vanderbilt University; Energy Center of Wisconsin; Universidade Nova de Lisboa; Great Lakes Bioenergy Research Center; Energy Center of Wisconsin; South China Agricultural University; Vanderbilt University; Qingdao National Laboratory for Marine Science and Technology; Shandong University of Science and Technology; Energy Center of Wisconsin; Washington University in St. Louis; Energy Center of Wisconsin; Great Lakes Bioenergy Research Center; Energy Center of Wisconsin; Max Planck Institute of Molecular Physiology; Universidade Federal de Minas Gerais; University of Ljubljana; Consejo Nacional de Investigaciones Científicas y Técnicas; National University of Comahue; Agricultural Research Service; National Center for Agricultural Utilization Research; Great Lakes Bioenergy Research Center; Energy Center of Wisconsin; Agricultural Research Service; National Center for Agricultural Utilization Research; Universidade Nova de Lisboa; Universidade Nova de Lisboa; South China Agricultural University; Vanderbilt University; Vanderbilt University; Zhejiang University; Westerdijk Fungal Biodiversity Institute; Vanderbilt University; Great Lakes Bioenergy Research Center; Energy Center of Wisconsin"
 "- **abstract_raw**: `text`" "{'Organisms': [0], 'exhibit': [1], 'extensive': [2], 'variation': [3, 121], 'in': [4, 70, 85, 98, 122], 'ecological': [5, 50], 'niche': [6, 77, 119], 'breadth,': [7], 'from': [8, 52, 66, 95], 'very': [9, 13], 'narrow': [10], '(specialists)': [11], 'to': [12, 22, 75], 'broad': [14], '(generalists).': [15], 'Two': [16], 'general': [17], 'paradigms': [18], 'have': [19], 'been': [20], 'proposed': [21], 'explain': [23], 'this': [24], 'variation:': [25], '(i)': [26], 'trade-offs': [27], 'between': [28, 92], 'performance': [29], 'efficiency': [30], 'and': [31, 33, 41, 49], 'breadth': [32, 78, 87, 120], '(ii)': [34], 'the': [35, 58, 86], 'joint': [36], 'influence': [37], 'of': [38, 57, 88], 'extrinsic': [39], '(environmental)': [40], 'intrinsic': [42, 96, 116], '(genomic)': [43], 'factors.': [44], 'We': [45, 80], 'assembled': [46], 'genomic,': [47], 'metabolic,': [48], 'data': [51, 113], 'nearly': [53], 'all': [54], 'known': [55], 'species': [56], 'ancient': [59], 'fungal': [60], 'subphylum': [61], 'Saccharomycotina': [62], '(1154': [63], 'yeast': [64], 'strains': [65], '1051': [67], 'species),': [68], 'grown': [69], '24': [71], 'different': [72], 'environmental': [73], 'conditions,': [74], 'examine': [76], 'evolution.': [79], 'found': [81, 106], 'that': [82, 115], 'large': [83], 'differences': [84, 97], 'carbon': [89], 'utilization': [90], 'traits': [91], 'yeasts': [93], 'stem': [94], 'genes': [99], 'encoding': [100], 'specific': [101], 'metabolic': [102], 'pathways,': [103], 'but': [104], 'we': [105], 'limited': [107], 'evidence': [108], 'for': [109], 'trade-offs.': [110], 'These': [111], 'comprehensive': [112], 'argue': [114], 'factors': [117], 'shape': [118], 'microbes.': [123]}"
 
-		
+
+usuarios
+
+"- **id**: `bigint`" 2
+"- **nome**: `character varying`" "Ana Souza"
+"- **email**: `character varying`" "thiaguinhomedeiros05@gmail.com"
+"- **senha**: `character varying`" "654321"
+"- **curriculo_texto**: `text`" "<?xml version=""1.0"" encoding=""UTF-8""?>
+<curriculo>
+    <nome>Thiago Raquel</nome>
+    <curso>Ciência da Computação</curso>
+    <resumo>Estudante focado em Engenharia de Software e Inteligência Artificial. Experiência com Java, Spring Boot e Next.js.</resumo>
+    <projetos>Desenvolvimento do Academix AI, Chatbot com API do Gemini.</projetos>
+</curriculo>"
+
+
+atividades_manuais
+
+"- **id**: `bigint`" 4
+"- **ano**: `integer`" 2024
+"- **descricao**: `text`" "Finalmente tenho minha primeira CNH!"
+"- **tipo**: `character varying`" "Premiação"
+"- **titulo**: `character varying`" "Conquista da primeira CNH"
+"- **usuario_id**: `bigint`" 2
+					

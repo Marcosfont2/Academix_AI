@@ -1,6 +1,6 @@
-package com.lattes.backend.domain.repository;
+package com.lattes.backend.domain.repository; // package declaration
 
-import com.lattes.backend.domain.model.ArtigoOpenAlex;
+import com.lattes.backend.domain.model.ArtigoOpenAlex; // Importa a classe de modelo ArtigoOpenAlex
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
