@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.lattes.backend.infra.exception.EntidadeNaoEncontradaException;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class ConselheiroIAService {

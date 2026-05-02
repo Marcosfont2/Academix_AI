@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface AtividadeManualRepository extends JpaRepository<AtividadeManual, Long> {
     
-    // Método mágico do Spring: ele traduz isso para "SELECT * FROM atividades_manuais WHERE usuario_id = ?"
+    // List não tem perigo de retornar null, então é mais seguro do que Optional para coleções.
     List<AtividadeManual> findByUsuarioId(Long usuarioId);
 }

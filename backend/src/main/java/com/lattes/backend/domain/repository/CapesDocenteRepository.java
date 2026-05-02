@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface CapesDocenteRepository extends JpaRepository<CapesDocente, Long> {
 
-    // --- MÉTODOS ANTIGOS (Mantidos para o UC de Gráficos Básicos) ---
+    // UC de gráfico básico
     @Query("SELECT c.nmAreaConhecimento, COUNT(c) FROM CapesDocente c WHERE c.nmAreaConhecimento IS NOT NULL GROUP BY c.nmAreaConhecimento ORDER BY COUNT(c) DESC")
     List<Object[]> contarDocentesPorArea();
 
@@ -20,6 +20,10 @@ public interface CapesDocenteRepository extends JpaRepository<CapesDocente, Long
     @Query("SELECT COUNT(c) FROM CapesDocente c WHERE c.nmEntidadeEnsino ILIKE %:nome%")
     Long contarTotalDocentesDaUniversidade(@Param("nome") String nome);
 
+    // Uso de JPQL Constructor Expression.
+    // Passa o caminho completo da classe DTO e já chama o construtor dela direto na query.
+    // O repository retorna uma lista de ItemContagemDTO, onde cada item tem o nome da faixa etária e a contagem correspondente.
+    // O service pode usar essa lista diretamente para montar os gráficos, sem precisar de conversões adicionais.
     @Query("SELECT new com.lattes.backend.api.dto.ItemContagemDTO(c.dsFaixaEtaria, COUNT(c)) " +
            "FROM CapesDocente c " +
            "WHERE c.nmEntidadeEnsino ILIKE %:nome% AND c.dsFaixaEtaria IS NOT NULL " +

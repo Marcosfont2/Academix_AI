@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface LattesPainelRepository extends JpaRepository<LattesPainel, Long> {
     
-    // --- MÉTODOS ANTIGOS (Mantidos para o UC de Gráficos Básicos) ---
+    // UC de gráfico básico
     @Query("SELECT l.sexo, SUM(l.contagemRegistro) FROM LattesPainel l WHERE l.sexo IS NOT NULL GROUP BY l.sexo")
     List<Object[]> contarRegistrosPorSexo();
 
@@ -43,12 +43,15 @@ public interface LattesPainelRepository extends JpaRepository<LattesPainel, Long
            "ORDER BY SUM(l.contagemRegistro) DESC")
     List<ItemContagemDTO> contarDistribuicaoRacaDaUniversidade(@Param("nome") String nome);
     
-    // Atualizado para os dois parâmetros
+    // Usamos SUM(contagemRegistro) ao invés de COUNT() por uma prática de Business Intelligence (BI).
+    // Embora hoje cada linha represente 1 pessoa (valor = 1), se no futuro o banco de dados
+    // decidir agrupar pessoas com perfis idênticos em uma única linha para economizar espaço
+    // (ex: uma linha representando 50 pessoas), o SUM garante que a matemática continue exata 
+    // sem precisarmos alterar o código Java.
     @Query("SELECT SUM(l.contagemRegistro) FROM LattesPainel l " +
            "WHERE l.instituicaoFormacao ILIKE :nome AND l.instituicaoAtuacao ILIKE :nome")
     Long contarRetidosNaMesmaInstituicao(@Param("nome") String nome);
 
-    // MÉTODOS DE BUSCA DE SUGESTÃO
     // Aqui mantemos o CONCAT nativo porque a string de pesquisa vem "limpa" do frontend (ex: "Fed")
     @Query(value = "SELECT DISTINCT instituicao_formacao FROM lattes_painel " +
                    "WHERE instituicao_formacao ILIKE CONCAT('%', :termo, '%') " +

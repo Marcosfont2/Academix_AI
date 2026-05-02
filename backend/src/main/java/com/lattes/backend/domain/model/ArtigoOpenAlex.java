@@ -31,7 +31,7 @@ import lombok.Data;
 /**
  * No Java, nós criamos dezenas de classes diferentes: classes de segurança, classes para enviar email,
  * DTOs para o frontend, etc. Como o Spring Boot sabe qual classe deve ser salva no banco de dados e qual
- * é apenas lógica interna? @Daí o Entity entra
+ * é apenas lógica interna? Daí o @Entity entra
  * 
  * Sem o @Entity: A classe ArtigoOpenAlex seria apenas um POJO (Plain Old Java Object - um objeto Java comum).
  * Ela existiria apenas na memória RAM enquanto o código roda e desapareceria assim que o programa fosse desligado.

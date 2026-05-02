@@ -1,1 +1,0 @@
-Classes simples para enviar apenas o necessário para o front.
