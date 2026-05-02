@@ -35,7 +35,7 @@ public class EstatisticaService {
             // Arredondando para 2 casas decimais
             porcentagem = Math.round(porcentagem * 100.0) / 100.0; 
             
-            porcentagens.add(new GeneroPorcentagemDTO(genero, porcentagem));
+            porcentagens.add(GeneroPorcentagemDTO.builder().genero(genero).porcentagem(porcentagem).build());
         }
 
         return porcentagens;

@@ -1,7 +1,9 @@
 package com.lattes.backend.api.dto;
 
 import java.util.List;
+import lombok.Builder;
 
+@Builder
 public record ComparacaoUniversidadeDTO(
     String nomeUniversidade,
     

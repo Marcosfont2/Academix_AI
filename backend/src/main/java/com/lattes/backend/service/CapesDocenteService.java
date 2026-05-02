@@ -24,7 +24,7 @@ public class CapesDocenteService {
                 .map(linha -> {
                     String area = (String) linha[0];
                     Long quantidade = ((Number) linha[1]).longValue();
-                    return new AreaConhecimentoDTO(area, quantidade);
+                    return AreaConhecimentoDTO.builder().area(area).quantidade(quantidade).build();
                 })
                 .collect(Collectors.toList());
     }

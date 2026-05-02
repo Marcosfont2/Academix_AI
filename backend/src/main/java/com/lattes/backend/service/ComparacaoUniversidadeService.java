@@ -71,25 +71,32 @@ public class ComparacaoUniversidadeService {
         List<DemografiaDTO> distribuicaoRaca = calcularPorcentagemDemografia(racaBruta);
 
         // 4. MONTANDO O DTO FINAL (Continua igual...)
-        return new ComparacaoUniversidadeDTO(
-                nomeUniversidade,
-                totalArtigos, 
-                totalCitacoes,
-                totalDocentes, 
-                faixaEtaria, 
-                topAreas,
-                List.of(), 
-                List.of(), 
-                List.of(), 
-                totalFormados, 
-                topPaises, 
-                List.of(), 
-                List.of(), 
-                List.of(), 
-                List.of(), 
-                distribuicaoSexo, 
-                distribuicaoRaca
-        );
+        return ComparacaoUniversidadeDTO.builder()
+            // 1. OPENALEX
+            .nomeUniversidade(nomeUniversidade)
+            .totalArtigos(totalArtigos)
+            .totalCitacoes(totalCitacoes)
+            
+            // 2. CAPES DOCENTES
+            .totalDocentes(totalDocentes)
+            .distribuicaoFaixaEtaria(faixaEtaria)
+            .topAreasAvaliacao(topAreas)
+            .topGrandesAreasConhecimento(List.of()) // FANTASMA 1: Fazer query de Grandes Áreas
+            .distribuicaoGrauPrograma(List.of())    // FANTASMA 2: Fazer query de Grau (Mestrado/Doutorado)
+            .distribuicaoConceitoPrograma(List.of())// FANTASMA 3: Fazer query de Notas da Capes
+            
+            // 3. LATTES PAINEL
+            .totalFormados(totalFormados)
+            .topPaisesNascimento(topPaises)
+            .distribuicaoRegiaoFormacao(List.of())  // FANTASMA 4: Fazer query de Região
+            .topInstituicoesAtuacao(List.of())      // FANTASMA 5: Fazer query de Instituição Atual
+            .distribuicaoSetorAtividade(List.of())  // FANTASMA 6: Fazer query de Setor Público/Privado
+            .distribuicaoEnquadramento(List.of())   // FANTASMA 7: Fazer query de Enquadramento
+            .distribuicaoSexo(distribuicaoSexo)
+            .distribuicaoRaca(distribuicaoRaca)
+            
+            // FINALIZA A CAIXA
+            .build();
     }
 
     /**
@@ -113,7 +120,7 @@ public class ComparacaoUniversidadeService {
             // Arredonda para 2 casas decimais (ex: 33.33)
             double porcentagemArredondada = Math.round(porcentagemExata * 100.0) / 100.0;
             
-            return new DemografiaDTO(item.chave(), item.quantidade(), porcentagemArredondada);
+            return DemografiaDTO.builder().categoria(item.chave()).totalAbsoluto(item.quantidade()).porcentagem(porcentagemArredondada).build();
         }).collect(Collectors.toList());
     }
 

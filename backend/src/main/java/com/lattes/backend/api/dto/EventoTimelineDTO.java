@@ -1,5 +1,7 @@
 package com.lattes.backend.api.dto;
+import lombok.Builder;
 
+@Builder
 public record EventoTimelineDTO(
     Integer ano,
     String tipo,      // Ex: "Formação", "Publicação", "Projeto"

@@ -49,12 +49,13 @@ public class RoadmapService {
         // 1. Busca as atividades manuais do Banco de Dados (Cursos, projetos)
         List<AtividadeManual> atividadesExtras = atividadeManualRepository.findByUsuarioId(userId);
         for (AtividadeManual extra : atividadesExtras) {
-            eventos.add(new EventoTimelineDTO(
-                extra.getAno(),
-                extra.getTipo(),
-                extra.getTitulo(),
-                extra.getDescricao()
-            ));
+            eventos.add(EventoTimelineDTO.builder()
+                .ano(extra.getAno())
+                .tipo(extra.getTipo())
+                .titulo(extra.getTitulo())
+                .descricao(extra.getDescricao())
+                .build()
+            );
         }
 
         // 2. Busca o XML do Lattes
@@ -71,24 +72,26 @@ public class RoadmapService {
                 NodeList graduacoes = doc.getElementsByTagName("GRADUACAO");
                 for (int i = 0; i < graduacoes.getLength(); i++) {
                     Element el = (Element) graduacoes.item(i);
-                    eventos.add(new EventoTimelineDTO(
-                        Integer.parseInt(el.getAttribute("ANO-DE-CONCLUSAO")),
-                        "Formação",
-                        "Graduação em " + el.getAttribute("NOME-CURSO"),
-                        el.getAttribute("NOME-INSTITUICAO")
-                    ));
+                    eventos.add(EventoTimelineDTO.builder()
+                        .ano(Integer.parseInt(el.getAttribute("ANO-DE-CONCLUSAO")))
+                        .tipo("Formação")
+                        .titulo("Graduação em " + el.getAttribute("NOME-CURSO"))
+                        .descricao(el.getAttribute("NOME-INSTITUICAO"))
+                        .build()
+                    );
                 }
 
                 // Extrair Publicações
                 NodeList artigos = doc.getElementsByTagName("DADOS-BASICOS-DO-ARTIGO");
                 for (int i = 0; i < artigos.getLength(); i++) {
                     Element el = (Element) artigos.item(i);
-                    eventos.add(new EventoTimelineDTO(
-                        Integer.parseInt(el.getAttribute("ANO-DO-ARTIGO")),
-                        "Publicação",
-                        el.getAttribute("TITULO-DO-ARTIGO"),
-                        "Artigo publicado em periódico/conferência"
-                    ));
+                    eventos.add(EventoTimelineDTO.builder()
+                        .ano(Integer.parseInt(el.getAttribute("ANO-DO-ARTIGO")))
+                        .tipo("Publicação")
+                        .titulo(el.getAttribute("TITULO-DO-ARTIGO"))
+                        .descricao("Artigo publicado em periódico/conferência")
+                        .build()
+                    );
                 }
             } catch (Exception e) {
                 e.printStackTrace();

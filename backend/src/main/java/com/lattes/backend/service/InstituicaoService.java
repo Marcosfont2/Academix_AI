@@ -22,7 +22,7 @@ public class InstituicaoService {
 
         // Converte a Entidade pesada do banco para o DTO leve
         return topInstituicoes.stream()
-                .map(inst -> new InstituicaoTopDTO(inst.getDisplayName(), inst.getWorksCount()))
+                .map(inst -> InstituicaoTopDTO.builder().nome(inst.getDisplayName()).publicacoes(inst.getWorksCount()).build())
                 .collect(Collectors.toList());
     }
 }

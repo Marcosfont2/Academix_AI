@@ -83,7 +83,7 @@ public class UsuarioService {
                     : textoLimpo;
             }
 
-            return new UsuarioPublicoDTO(u.getId(), u.getNome(), resumo);
+            return UsuarioPublicoDTO.builder().id(u.getId()).nome(u.getNome()).descricaoCurta(resumo).build();
         })
         .collect(Collectors.toList());
     }

@@ -23,7 +23,7 @@ public class ArtigoService {
                 .map(linha -> {
                     String tipo = (String) linha[0];
                     Long quantidade = ((Number) linha[1]).longValue();
-                    return new PublicacaoPorTipoDTO(tipo, quantidade);
+                    return PublicacaoPorTipoDTO.builder().tipo(tipo).quantidade(quantidade).build();
                 })
                 .collect(Collectors.toList());
     }
