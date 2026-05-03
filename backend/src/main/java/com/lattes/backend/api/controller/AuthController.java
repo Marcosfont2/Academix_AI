@@ -6,7 +6,7 @@ import com.lattes.backend.api.dto.LoginDTO;
 import com.lattes.backend.api.dto.UsuarioPublicoDTO;
 import com.lattes.backend.domain.model.Usuario;
 import com.lattes.backend.service.UsuarioService;
-import com.lattes.backend.service.RoadmapService; // 
+import com.lattes.backend.service.RoadmapService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +18,8 @@ import java.util.List;
 public class AuthController {
 
     private final UsuarioService service;
-    private final RoadmapService roadmapService; // 3. Declarando a nova dependência
+    private final RoadmapService roadmapService;
 
-    // 4. Injetando no construtor
     public AuthController(UsuarioService service, RoadmapService roadmapService) {
         this.service = service;
         this.roadmapService = roadmapService;

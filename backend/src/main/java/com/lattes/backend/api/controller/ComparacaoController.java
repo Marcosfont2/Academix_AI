@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/comparacao")
-@CrossOrigin(origins = "http://localhost:3000") // Permite acesso do Next.js
+@CrossOrigin(origins = "http://localhost:3000")
 public class ComparacaoController {
 
     private final ComparacaoUniversidadeService service;
@@ -30,7 +30,6 @@ public class ComparacaoController {
         return ResponseEntity.ok(dados);
     }
 
-    // Adicione este método na classe
     @GetMapping("/sugestoes")
     public ResponseEntity<List<String>> buscarSugestoes(@RequestParam String termo) {
         List<String> sugestoes = service.buscarSugestoes(termo);

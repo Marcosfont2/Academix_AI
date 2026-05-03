@@ -8,9 +8,10 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000") // This allows Next.js to talk to Java
+@CrossOrigin(origins = "http://localhost:3000")
 public class UploadController {
 
+    // TODO: Código morto, não estamos mais usando ele.
     @PostMapping("/upload")
     public ResponseEntity<String> handleFileUpload(@RequestParam("lattes") MultipartFile file) {
         if (file.isEmpty()) {
