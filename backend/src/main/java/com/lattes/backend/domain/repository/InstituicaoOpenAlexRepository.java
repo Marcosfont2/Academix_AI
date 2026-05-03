@@ -13,7 +13,8 @@ public interface InstituicaoOpenAlexRepository extends JpaRepository<Instituicao
     
     List<InstituicaoOpenAlex> findTop10ByOrderByWorksCountDesc();
 
-    // Onde é usado?
+    // Tem o nome sugestões limpas, mas não tem nenhuma normalização, é só o nome cru mesmo.
+    // As instituições do open_alex estão com o nome limpo no banco de dados.
     // Aqui é a caixa de pesquisa do frontend com autocomplete.
     // Insensitive like e CONCAT são usados para permitir buscas parciais e case-insensitive, o que é ideal para uma funcionalidade de sugestão.
     @Query(value = "SELECT DISTINCT display_name FROM instituicoes_openalex " +
@@ -21,7 +22,7 @@ public interface InstituicaoOpenAlexRepository extends JpaRepository<Instituicao
                "LIMIT 10", nativeQuery = true) // Native query significa que estamos usando SQL puro, então CONCAT é necessário para a busca com curinga
     List<String> buscarSugestoesLimpas(@Param("termo") String termo);
 
-    // Onde é usado?
+    // Busca o nome específico da instituição.
     // Param é para evitar SQL injection.
     // Mudamos de Optional para List para evitar o erro de múltiplos resultados, já que a busca por nome pode retornar várias instituições .
     @Query("SELECT o FROM InstituicaoOpenAlex o WHERE o.displayName ILIKE %:nome% ORDER BY o.worksCount DESC")

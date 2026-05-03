@@ -5,7 +5,6 @@ import com.lattes.backend.domain.repository.CapesDocenteRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CapesDocenteService {
@@ -20,12 +19,12 @@ public class CapesDocenteService {
         List<Object[]> resultadosBanco = repository.contarDocentesPorArea();
 
         return resultadosBanco.stream()
-                .limit(8) // Limitamos às Top 8 para o gráfico de Radar não virar uma bagunça
+                .limit(8) // Limitamos às top 8 no service. 
                 .map(linha -> {
                     String area = (String) linha[0];
                     Long quantidade = ((Number) linha[1]).longValue();
                     return AreaConhecimentoDTO.builder().area(area).quantidade(quantidade).build();
                 })
-                .collect(Collectors.toList());
+                .toList(); // Coleta os DTOs em uma lista e retorna
     }
 }

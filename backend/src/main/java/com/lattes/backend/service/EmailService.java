@@ -1,5 +1,6 @@
 package com.lattes.backend.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -9,13 +10,17 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
+    // Pega o email do remetente do application.properties.
+    @Value("${spring.mail.username}")
+    private String emailRemetente;
+
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
     public void enviarEmailBoasVindas(String para, String nomeUsuario) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("Academix AI <seu-email@gmail.com>");
+        message.setFrom("Academix AI <" + emailRemetente + ">");
         message.setTo(para);
         message.setSubject("Bem-vindo ao Academix AI!");
         message.setText("Olá, " + nomeUsuario + "!\n\n" +
@@ -29,6 +34,7 @@ public class EmailService {
 
     public void enviarEmailAtualizacaoCurriculo(String para, String nomeUsuario) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("Academix AI <" + emailRemetente + ">");
         message.setTo(para);
         message.setSubject("✅ Currículo Atualizado no Academix AI");
         message.setText("Olá, " + nomeUsuario + "!\n\n" +

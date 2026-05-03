@@ -6,7 +6,6 @@ import com.lattes.backend.domain.repository.InstituicaoOpenAlexRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class InstituicaoService {
@@ -18,11 +17,12 @@ public class InstituicaoService {
     }
 
     public List<InstituicaoTopDTO> getTop10Instituicoes() {
+        // O data spring já faz a consulta otimizada sem precisar descrever em sql puro.
         List<InstituicaoOpenAlex> topInstituicoes = repository.findTop10ByOrderByWorksCountDesc();
 
         // Converte a Entidade pesada do banco para o DTO leve
         return topInstituicoes.stream()
                 .map(inst -> InstituicaoTopDTO.builder().nome(inst.getDisplayName()).publicacoes(inst.getWorksCount()).build())
-                .collect(Collectors.toList());
+                .toList();
     }
 }

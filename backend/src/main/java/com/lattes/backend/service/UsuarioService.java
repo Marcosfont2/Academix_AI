@@ -14,9 +14,8 @@ import com.lattes.backend.infra.exception.EntidadeNaoEncontradaException;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
-    private final EmailService emailService; // 1. Declarando a injeção de dependência
+    private final EmailService emailService;
 
-    // 2. Injetando no construtor
     public UsuarioService(UsuarioRepository repository, EmailService emailService) {
         this.repository = repository;
         this.emailService = emailService;
@@ -34,32 +33,33 @@ public class UsuarioService {
         usuario.setCurriculoTexto(novoTexto);
         repository.save(usuario); // Salva o texto no banco
         
-        // NOVO: Dispara o e-mail confirmando o upload com sucesso
+        // Dispara o e-mail confirmando o upload com sucesso
         emailService.enviarEmailAtualizacaoCurriculo(usuario.getEmail(), usuario.getNome());
     }
 
     public String buscarCurriculo(Long userId) {
-        Usuario usuario = repository.findById(userId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com ID " + userId + " não encontrado."));
-        
-        return usuario.getCurriculoTexto();
+        return repository.findById(userId)
+            // Esse map é uma forma enxuta de escrever um if.
+            .map(Usuario::getCurriculoTexto) // Se achar o usuário, já extrai o currículo dele
+            .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário com ID " + userId + " não encontrado."));
     }
 
     public Usuario registrar(Usuario novoUsuario) {
-        // Regra de ouro: Não deixar criar dois usuários com o mesmo email
+        // Não deixar criar dois usuários com o mesmo email
+        // TODO: exceção personalizada
         if (repository.findByEmail(novoUsuario.getEmail()).isPresent()) {
             throw new IllegalArgumentException("E-mail já cadastrado!");
         }
         
-        // 3. Salva no banco de dados primeiro
+        // Salva no banco de dados primeiro
         Usuario usuarioSalvo = repository.save(novoUsuario);
         
-        // 4. Dispara o e-mail de boas-vindas usando os dados salvos
+        // Dispara o e-mail de boas-vindas usando os dados salvos
         emailService.enviarEmailBoasVindas(usuarioSalvo.getEmail(), usuarioSalvo.getNome());
         
         return usuarioSalvo;
     }
-
+    // TODO: tirar o exception
     public void salvarCurriculoXml(Long userId, org.springframework.web.multipart.MultipartFile arquivo) throws Exception {
         // Lê todos os bytes do arquivo e transforma em String
         String conteudo = new String(arquivo.getBytes(), java.nio.charset.StandardCharsets.UTF_8);
@@ -67,6 +67,7 @@ public class UsuarioService {
         atualizarCurriculo(userId, conteudo);
     }
 
+    // Função que lista os usuários para a página de "Explorar Pesquisadores".
     public List<UsuarioPublicoDTO> listarUsuariosPublicos() {
     return repository.findAll().stream()
         .map(u -> {

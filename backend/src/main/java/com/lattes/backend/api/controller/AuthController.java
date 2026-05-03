@@ -6,11 +6,11 @@ import com.lattes.backend.api.dto.LoginDTO;
 import com.lattes.backend.api.dto.UsuarioPublicoDTO;
 import com.lattes.backend.domain.model.Usuario;
 import com.lattes.backend.service.UsuarioService;
-import com.lattes.backend.service.RoadmapService; // 1. Import do novo Service
+import com.lattes.backend.service.RoadmapService; // 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List; // 2. Import da Lista do Java
+import java.util.List; 
 
 @RestController
 @RequestMapping("/api/auth")

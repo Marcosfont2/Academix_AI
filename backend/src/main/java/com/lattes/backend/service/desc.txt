@@ -1,1 +1,0 @@
-Onde ficará a lógica (ex: calcular a porcentagem de gênero).

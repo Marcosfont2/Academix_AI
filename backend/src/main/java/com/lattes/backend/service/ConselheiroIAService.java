@@ -22,14 +22,15 @@ public class ConselheiroIAService {
     @Value("${gemini.api.key}")
     private String apiKey;
 
-    public ConselheiroIAService(UsuarioRepository repository) {
+    // RestTemplate é injetado pelo Spring.
+    public ConselheiroIAService(UsuarioRepository repository, RestTemplate restTemplate) {
         this.repository = repository;
-        this.restTemplate = new RestTemplate();
+        this.restTemplate = restTemplate;
     }
 
     @SuppressWarnings("unchecked")
     public String gerarConselhoCarreira(Long userId) {
-        // 1. Busca o usuário com tratamento de erro
+        // Busca o usuário com tratamento de erro
         Usuario usuario = repository.findById(userId)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário não encontrado. Impossível gerar conselho."));
 
@@ -40,13 +41,13 @@ public class ConselheiroIAService {
 
         String curriculo = usuario.getCurriculoTexto();
 
-        // 2. Monta o Prompt Mestre (Instruções para a IA)
+        // Monta o Prompt Mestre (Instruções para a IA)
         String prompt = "Você é um conselheiro acadêmico sênior, amigável e encorajador. " +
                 "Leia o currículo do aluno abaixo (que pode estar em formato XML) e sugira o melhor próximo passo para a carreira dele. " +
                 "Seja direto, prático e divida a resposta em tópicos curtos. " +
                 "Currículo do aluno: " + curriculo;
 
-        // 3. Prepara a requisição no formato exato que a API do Gemini exige
+        // Prepara a requisição no formato exato que a API do Gemini exige
         // O sufixo "-latest" costuma apontar para a versão que ainda está no ar na cota gratuita
         String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey;
         HttpHeaders headers = new HttpHeaders();
@@ -63,7 +64,7 @@ public class ConselheiroIAService {
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
-        // 4. Faz a chamada para a internet e extrai a resposta
+        // Faz a chamada para a internet e extrai a resposta
         try {
             ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
             // Navega pelo JSON de resposta do Gemini para pegar apenas o texto gerado
@@ -74,7 +75,8 @@ public class ConselheiroIAService {
             
             return (String) parts.get(0).get("text");
             
-        } catch (Exception e) {
+        } catch (Exception e) { // Se a internet do servidor cair ou ultrapassar a cota da API.
+            //TODO: Atualizar para IntegraçãoAIException depois
             e.printStackTrace();
             return "Desculpe, ocorreu um erro ao se comunicar com o conselheiro IA no momento.";
         }
