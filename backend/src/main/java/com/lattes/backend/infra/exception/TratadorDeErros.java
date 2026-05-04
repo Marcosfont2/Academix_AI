@@ -12,69 +12,89 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class TratadorDeErros {
 
-    // 1. Intercepta erros quando não achamos algo no banco (Nosso Erro 404)
+    // 1. Intercepta erros quando não achamos algo no banco (Erro 404)
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
     public ResponseEntity<ErroPadraoDTO> tratarErro404(EntidadeNaoEncontradaException ex, HttpServletRequest request) {
-        
         ErroPadraoDTO erro = new ErroPadraoDTO(
                 LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(), // Código 404
+                HttpStatus.NOT_FOUND.value(),
                 "Not Found",
-                ex.getMessage(), // Pega a mensagem que mandamos lá do Service
-                request.getRequestURI() // Pega a URL que o Frontend tentou acessar
+                ex.getMessage(),
+                request.getRequestURI()
         );
-        
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
     }
 
-    // 2. Um "Pega-Tudo" para qualquer erro genérico no código (Erro 500)
-    // Isso evita que o Spring cuspa aquele stack trace gigante no Frontend
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErroPadraoDTO> tratarErro500(Exception ex, HttpServletRequest request) {
-        
+    // 2. Intercepta erros de regra de negócio (Erro 400)
+    // Tipo tentar criar um curso com nome vazio, cadastrar um email já existente, etc
+    @ExceptionHandler(RegraNegocioException.class)
+    public ResponseEntity<ErroPadraoDTO> tratarRegraDeNegocio(RegraNegocioException ex, HttpServletRequest request) {
         ErroPadraoDTO erro = new ErroPadraoDTO(
                 LocalDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(), // Código 500
-                "Internal Server Error",
-                "Ocorreu um erro interno inesperado no servidor.", // Escondemos o erro real por segurança
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                ex.getMessage(),
                 request.getRequestURI()
         );
-        
-        // Imprime no console do Java para você (desenvolvedor) poder arrumar, mas não manda pro usuário
-        ex.printStackTrace(); 
-        
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
     }
 
-    // 3. Tratador para falhas de conexão com o Banco de Dados ou Coluna inexistente
-    // O DataAccessException é a classe mãe de todos os erros de banco no Spring (JPA/Hibernate)
-    @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<ErroPadraoDTO> tratarErroBancoDeDados(DataAccessException ex, HttpServletRequest request) {
-        ErroPadraoDTO erro = new ErroPadraoDTO(
-                LocalDateTime.now(),
-                HttpStatus.SERVICE_UNAVAILABLE.value(), // Código 503
-                "Service Unavailable",
-                "O banco de dados está temporariamente indisponível ou a consulta falhou.",
-                request.getRequestURI()
-        );
-        
-        ex.printStackTrace(); // Imprime no console para você debugar
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(erro);
-    }
-
-    // 4. Tratador para quando o usuário/front-end manda um parâmetro errado
-    // Ex: Pediu o gráfico da área "Alienígenas", mas essa área não existe no sistema.
+    // 3. Intercepta parâmetros inválidos do frontend (Erro 400)
+    // Por exemplo, o frontend manda um ID de curso como "abc" quando deveria ser um número.
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErroPadraoDTO> tratarRequisicaoInvalida(IllegalArgumentException ex, HttpServletRequest request) {
         ErroPadraoDTO erro = new ErroPadraoDTO(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(), // Código 400
+                HttpStatus.BAD_REQUEST.value(),
                 "Bad Request",
-                ex.getMessage(), // Exibe a mensagem do porquê foi inválido
+                ex.getMessage(),
                 request.getRequestURI()
         );
-        
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
     }
 
+    // 4. Intercepta falhas da IA (Erro 503)
+    // Erro de comunicação com a API da IA, ou a IA retorna um erro.
+    @ExceptionHandler(IntegracaoIAException.class)
+    public ResponseEntity<ErroPadraoDTO> tratarIntegracaoIA(IntegracaoIAException ex, HttpServletRequest request) {
+        ErroPadraoDTO erro = new ErroPadraoDTO(
+                LocalDateTime.now(),
+                HttpStatus.SERVICE_UNAVAILABLE.value(),
+                "Service Unavailable - IA",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(erro);
+    }
+
+    // 5. Intercepta falhas do Banco de Dados (Erro 503)
+    // Pode ser o banco fora do ar, ou uma consulta que falhou por algum motivo.
+    // Se o seu banco de dados PostgreSQL desligar do nada, ou se uma tabela for deletada por acidente
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ErroPadraoDTO> tratarErroBancoDeDados(DataAccessException ex, HttpServletRequest request) {
+        ErroPadraoDTO erro = new ErroPadraoDTO(
+                LocalDateTime.now(),
+                HttpStatus.SERVICE_UNAVAILABLE.value(),
+                "Database Error",
+                "O banco de dados está temporariamente indisponível ou a consulta falhou.",
+                request.getRequestURI()
+        );
+        ex.printStackTrace(); // Imprime no console para você debugar
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(erro);
+    }
+
+    // 6. O "Pega-Tudo" para qualquer erro não mapeado (Erro 500)
+    // Se acontecer um erro que não foi previsto pelos outros handlers, ele cai aqui. Exemplo: um NullPointerException, ou um erro de lógica no código.
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErroPadraoDTO> tratarErro500(Exception ex, HttpServletRequest request) {
+        ErroPadraoDTO erro = new ErroPadraoDTO(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                "Ocorreu um erro interno inesperado no servidor.", 
+                request.getRequestURI()
+        );
+        ex.printStackTrace(); 
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+    }
 }

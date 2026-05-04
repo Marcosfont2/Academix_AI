@@ -1,5 +1,7 @@
 package com.lattes.backend.service;
 
+import com.lattes.backend.infra.exception.IntegracaoIAException;
+import com.lattes.backend.infra.exception.RegraNegocioException;
 import com.lattes.backend.domain.model.Usuario;
 import com.lattes.backend.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +42,11 @@ public class ConselheiroIAService {
         }
 
         String curriculo = usuario.getCurriculoTexto();
+        
+        // Se o XML tiver menos de 100 caracteres, provavelmente está incompleto ou corrompido
+        if (curriculo.length() < 100) {
+            throw new RegraNegocioException("O currículo cadastrado é muito curto para gerar um conselho válido. Por favor, atualize seu Lattes.");
+        }
 
         // Monta o Prompt Mestre (Instruções para a IA)
         String prompt = "Você é um conselheiro acadêmico sênior, amigável e encorajador. " +
@@ -66,19 +73,19 @@ public class ConselheiroIAService {
 
         // Faz a chamada para a internet e extrai a resposta
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
-            // Navega pelo JSON de resposta do Gemini para pegar apenas o texto gerado
-            Map<String, Object> responseBody = response.getBody();
+            ResponseEntity<?> response = restTemplate.postForEntity(url, request, Map.class);
+            
+            Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+            
+            // O resto continua igualzinho!
             java.util.List<Map<String, Object>> candidates = (java.util.List<Map<String, Object>>) responseBody.get("candidates");
             Map<String, Object> content = (Map<String, Object>) candidates.get(0).get("content");
             java.util.List<Map<String, Object>> parts = (java.util.List<Map<String, Object>>) content.get("parts");
             
             return (String) parts.get(0).get("text");
             
-        } catch (Exception e) { // Se a internet do servidor cair ou ultrapassar a cota da API.
-            //TODO: Atualizar para IntegraçãoAIException depois
-            e.printStackTrace();
-            return "Desculpe, ocorreu um erro ao se comunicar com o conselheiro IA no momento.";
+        } catch (Exception e) { // Se a internet falar ou a API estourar...
+            throw new IntegracaoIAException("Desculpe, ocorreu um erro de conexão com o conselheiro IA no momento.");
         }
     }
 }

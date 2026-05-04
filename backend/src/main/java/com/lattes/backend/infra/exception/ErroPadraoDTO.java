@@ -2,7 +2,7 @@ package com.lattes.backend.infra.exception;
 
 import java.time.LocalDateTime;
 
-// Usamos record para ser rápido e limpo. Isso é o que o Frontend vai ler!
+// Usamos record para ser rápido e limpo.
 public record ErroPadraoDTO(
         LocalDateTime timestamp, // Que horas o erro aconteceu
         Integer status,          // O código HTTP (ex: 404, 400)

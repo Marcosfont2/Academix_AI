@@ -1,5 +1,7 @@
 package com.lattes.backend.service;
 
+import java.io.IOException;
+import com.lattes.backend.infra.exception.RegraNegocioException;
 import com.lattes.backend.api.dto.UsuarioPublicoDTO;
 import com.lattes.backend.domain.model.Usuario;
 import com.lattes.backend.domain.repository.UsuarioRepository;
@@ -46,9 +48,8 @@ public class UsuarioService {
 
     public Usuario registrar(Usuario novoUsuario) {
         // Não deixar criar dois usuários com o mesmo email
-        // TODO: exceção personalizada
         if (repository.findByEmail(novoUsuario.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("E-mail já cadastrado!");
+            throw new RegraNegocioException("E-mail já cadastrado!"); 
         }
         
         // Salva no banco de dados primeiro
@@ -59,12 +60,26 @@ public class UsuarioService {
         
         return usuarioSalvo;
     }
-    // TODO: tirar o exception
-    public void salvarCurriculoXml(Long userId, org.springframework.web.multipart.MultipartFile arquivo) throws Exception {
-        // Lê todos os bytes do arquivo e transforma em String
-        String conteudo = new String(arquivo.getBytes(), java.nio.charset.StandardCharsets.UTF_8);
+
+    
+    public void salvarCurriculoXml(Long userId, org.springframework.web.multipart.MultipartFile arquivo) {
+        // Validação 1: O arquivo está vazio?
+        if (arquivo.isEmpty()) {
+            throw new RegraNegocioException("O arquivo enviado está vazio.");
+        }
         
-        atualizarCurriculo(userId, conteudo);
+        // Validação 2: É realmente um XML?
+        String nomeArquivo = arquivo.getOriginalFilename();
+        if (nomeArquivo == null || !nomeArquivo.toLowerCase().endsWith(".xml")) {
+            throw new RegraNegocioException("Formato inválido! Por favor, envie apenas o arquivo .xml do Lattes.");
+        }
+
+        try {
+            String conteudo = new String(arquivo.getBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            atualizarCurriculo(userId, conteudo);
+        } catch (IOException e) {
+            throw new RegraNegocioException("Falha ao ler o conteúdo do arquivo enviado.");
+        }
     }
 
     // Função que lista os usuários para a página de "Explorar Pesquisadores".
