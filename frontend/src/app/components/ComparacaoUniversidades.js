@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { BookOpen, Users, GraduationCap, Award, Search } from 'lucide-react';
+// Adicionamos o Globe e Trophy, e removemos o MapPin
+import { BookOpen, Users, GraduationCap, Award, Search, Globe, Trophy, Library, Building2, PlaneTakeoff } from 'lucide-react'; 
 
 // =========================================================================
 // 1. COMPONENTE DE BUSCA DINÂMICA
@@ -14,7 +15,6 @@ const BuscadorUniversidade = ({ label, corHex, valor, setValor }) => {
 
   useEffect(() => {
     const delayDebounce = setTimeout(async () => {
-      // Só busca se tiver 3 ou mais letras e se o termo for diferente do que já está selecionado
       if (termo.length >= 3 && termo !== valor) {
         try {
           const res = await fetch(`http://localhost:8080/api/comparacao/sugestoes?termo=${encodeURIComponent(termo)}`);
@@ -37,7 +37,7 @@ const BuscadorUniversidade = ({ label, corHex, valor, setValor }) => {
 
   const selecionarSugestao = (nome) => {
     setTermo(nome);
-    setValor(nome); // Atualiza o estado da tela principal
+    setValor(nome); 
     setMostrarLista(false);
   };
 
@@ -70,6 +70,52 @@ const BuscadorUniversidade = ({ label, corHex, valor, setValor }) => {
           ))}
         </ul>
       )}
+    </div>
+  );
+};
+
+// =========================================================================
+// NOVO: COMPONENTE DE RANKING (LISTA LADO A LADO)
+// =========================================================================
+const ListaTop = ({ titulo, icone: Icon, dadosA, dadosB, nomeA, nomeB }) => {
+  // Pega apenas os 5 primeiros para não deixar a lista gigante
+  const top5A = dadosA?.slice(0, 5) || [];
+  const top5B = dadosB?.slice(0, 5) || [];
+
+  return (
+    <div className="bg-white p-6 rounded-2xl shadow-sm col-span-1 lg:col-span-2">
+      <div className="flex items-center justify-center gap-3 mb-6">
+        <Icon size={24} className="text-slate-700" />
+        <h3 className="text-lg font-bold text-slate-800">{titulo}</h3>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Lado A */}
+        <div>
+          <h4 className="text-md font-bold text-indigo-600 mb-4 pb-2 border-b-2 border-indigo-100">{nomeA}</h4>
+          <ul className="space-y-3">
+            {top5A.length > 0 ? top5A.map((item, idx) => (
+              <li key={idx} className="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-indigo-50 transition-colors">
+                <span className="text-sm font-medium text-slate-700 truncate pr-4">{idx + 1}º {item.chave}</span>
+                <span className="text-sm font-black text-indigo-600">{item.quantidade.toLocaleString('pt-BR')}</span>
+              </li>
+            )) : <p className="text-sm text-slate-400 italic">Sem dados disponíveis</p>}
+          </ul>
+        </div>
+
+        {/* Lado B */}
+        <div>
+          <h4 className="text-md font-bold text-emerald-600 mb-4 pb-2 border-b-2 border-emerald-100">{nomeB}</h4>
+          <ul className="space-y-3">
+            {top5B.length > 0 ? top5B.map((item, idx) => (
+              <li key={idx} className="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-emerald-50 transition-colors">
+                <span className="text-sm font-medium text-slate-700 truncate pr-4">{idx + 1}º {item.chave}</span>
+                <span className="text-sm font-black text-emerald-600">{item.quantidade.toLocaleString('pt-BR')}</span>
+              </li>
+            )) : <p className="text-sm text-slate-400 italic">Sem dados disponíveis</p>}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };
@@ -108,20 +154,25 @@ export default function ComparacaoUniversidades() {
     }
   };
 
-  // Função já corrigida para suportar nomes de universidades idênticos
   const mesclarDadosDemografia = (listaA, listaB) => {
     const mapa = new Map();
-    
-    listaA?.forEach(item => {
-      mapa.set(item.categoria, { nome: item.categoria, valorA: item.porcentagem });
-    });
-    
+    listaA?.forEach(item => mapa.set(item.categoria, { nome: item.categoria, valorA: item.porcentagem }));
     listaB?.forEach(item => {
       const existente = mapa.get(item.categoria) || { nome: item.categoria };
       existente.valorB = item.porcentagem;
       mapa.set(item.categoria, existente);
     });
+    return Array.from(mapa.values());
+  };
 
+  const mesclarDadosContagem = (listaA, listaB) => {
+    const mapa = new Map();
+    listaA?.forEach(item => mapa.set(item.chave, { nome: item.chave, valorA: item.quantidade }));
+    listaB?.forEach(item => {
+      const existente = mapa.get(item.chave) || { nome: item.chave };
+      existente.valorB = item.quantidade;
+      mapa.set(item.chave, existente);
+    });
     return Array.from(mapa.values());
   };
 
@@ -135,26 +186,13 @@ export default function ComparacaoUniversidades() {
           
           <div className="flex flex-col md:flex-row gap-6 items-end justify-center">
             <div className="w-full md:w-2/5">
-              <BuscadorUniversidade 
-                label="Instituição A (Azul)" 
-                corHex="#6366f1" 
-                valor={univA} 
-                setValor={setUnivA} 
-              />
+              <BuscadorUniversidade label="Instituição A (Azul)" corHex="#6366f1" valor={univA} setValor={setUnivA} />
             </div>
-
             <div className="w-full md:w-2/5">
-              <BuscadorUniversidade 
-                label="Instituição B (Verde)" 
-                corHex="#10b981" 
-                valor={univB} 
-                setValor={setUnivB} 
-              />
+              <BuscadorUniversidade label="Instituição B (Verde)" corHex="#10b981" valor={univB} setValor={setUnivB} />
             </div>
-
             <button 
-              onClick={buscarDados}
-              disabled={loading}
+              onClick={buscarDados} disabled={loading}
               className="w-full md:w-1/5 px-8 py-3 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition-all disabled:opacity-50 h-[48px]"
             >
               {loading ? "Processando..." : "Comparar"}
@@ -216,7 +254,7 @@ export default function ComparacaoUniversidades() {
               </div>
             </div>
 
-            {/* SESSÃO DE GRÁFICOS */}
+            {/* SESSÃO DE GRÁFICOS E RANKINGS */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               
               {/* Gráfico 1: Comparação de Sexo */}
@@ -254,6 +292,91 @@ export default function ComparacaoUniversidades() {
                   </ResponsiveContainer>
                 </div>
               </div>
+
+              {/* Gráfico 3: Comparação de Faixa Etária (Quantidade Absoluta) */}
+              <div className="bg-white p-6 rounded-2xl shadow-sm col-span-1 lg:col-span-2">
+                <h3 className="text-lg font-bold text-slate-800 mb-6 text-center">Faixa Etária dos Docentes</h3>
+                <div className="h-80 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={mesclarDadosContagem(dadosA.distribuicaoFaixaEtaria, dadosB.distribuicaoFaixaEtaria)} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0"/>
+                      <XAxis dataKey="nome" axisLine={false} tickLine={false} />
+                      <YAxis axisLine={false} tickLine={false} />
+                      <Tooltip cursor={{fill: '#f1f5f9'}} />
+                      <Legend iconType="circle" />
+                      <Bar dataKey="valorA" name={dadosA.nomeUniversidade} fill="#6366f1" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="valorB" name={dadosB.nomeUniversidade} fill="#10b981" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* NOVOS RANKINGS */}
+              <ListaTop 
+                titulo="Top 5 Áreas de Avaliação (CAPES)" 
+                icone={Trophy}
+                dadosA={dadosA.topAreasAvaliacao} 
+                dadosB={dadosB.topAreasAvaliacao}
+                nomeA={dadosA.nomeUniversidade}
+                nomeB={dadosB.nomeUniversidade}
+              />
+
+              <ListaTop 
+                titulo="Top 5 Países de Nascimento (Comunidade Lattes)" 
+                icone={Globe}
+                dadosA={dadosA.topPaisesNascimento} 
+                dadosB={dadosB.topPaisesNascimento}
+                nomeA={dadosA.nomeUniversidade}
+                nomeB={dadosB.nomeUniversidade}
+              />
+
+              {/* RANKING: Grandes Áreas */}
+              <ListaTop 
+                titulo="Top 5 Grandes Áreas do Conhecimento" 
+                icone={Library}
+                dadosA={dadosA.topGrandesAreasConhecimento} 
+                dadosB={dadosB.topGrandesAreasConhecimento}
+                nomeA={dadosA.nomeUniversidade}
+                nomeB={dadosB.nomeUniversidade}
+              />
+
+              {/* NOVO: Gráfico de Conceito/Notas da Capes */}
+              <div className="bg-white p-6 rounded-2xl shadow-sm col-span-1 lg:col-span-2">
+                <h3 className="text-lg font-bold text-slate-800 mb-6 text-center">Notas dos Programas (Conceito CAPES)</h3>
+                <div className="h-80 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={mesclarDadosContagem(dadosA.distribuicaoConceitoPrograma, dadosB.distribuicaoConceitoPrograma)} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0"/>
+                      <XAxis dataKey="nome" axisLine={false} tickLine={false} />
+                      <YAxis axisLine={false} tickLine={false} />
+                      <Tooltip cursor={{fill: '#f1f5f9'}} />
+                      <Legend iconType="circle" />
+                      <Bar dataKey="valorA" name={dadosA.nomeUniversidade} fill="#6366f1" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="valorB" name={dadosB.nomeUniversidade} fill="#10b981" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* NOVA LISTA: Top Instituições de Atuação */}
+              <ListaTop 
+                titulo="Top 5 Instituições Empregadoras (Onde atuam hoje?)" 
+                icone={Building2}
+                dadosA={dadosA.topInstituicoesAtuacao} 
+                dadosB={dadosB.topInstituicoesAtuacao}
+                nomeA={dadosA.nomeUniversidade}
+                nomeB={dadosB.nomeUniversidade}
+              />
+
+              {/* NOVA LISTA: Top Países de Atuação */}
+              <ListaTop 
+                titulo="Top 5 Países de Atuação (Egressos/Pesquisadores)" 
+                icone={PlaneTakeoff}
+                dadosA={dadosA.topPaisesAtuacao} 
+                dadosB={dadosB.topPaisesAtuacao}
+                nomeA={dadosA.nomeUniversidade}
+                nomeB={dadosB.nomeUniversidade}
+              />
 
             </div>
           </div>

@@ -58,4 +58,18 @@ public interface LattesPainelRepository extends JpaRepository<LattesPainel, Long
                    "AND instituicao_formacao IS NOT NULL " +
                    "LIMIT 10", nativeQuery = true)
     List<String> buscarSugestoesDeNomes(@Param("termo") String termo);
+
+    @Query("SELECT new com.lattes.backend.api.dto.ItemContagemDTO(l.instituicaoAtuacao, COUNT(l)) " +
+           "FROM LattesPainel l WHERE l.instituicaoFormacao LIKE :universidade " +
+           "AND l.instituicaoAtuacao IS NOT NULL " +
+           "AND UPPER(l.instituicaoAtuacao) NOT LIKE '%NÃO INFORMADO%' " +
+           "AND UPPER(l.instituicaoAtuacao) NOT LIKE '%NAO INFORMADO%' " +
+           "GROUP BY l.instituicaoAtuacao ORDER BY COUNT(l) DESC")
+    List<ItemContagemDTO> contarTopInstituicoesAtuacaoDaUniversidade(@Param("universidade") String universidade);
+
+    @Query("SELECT new com.lattes.backend.api.dto.ItemContagemDTO(l.paisAtuacao, COUNT(l)) " +
+           "FROM LattesPainel l WHERE l.instituicaoFormacao LIKE :universidade AND l.paisAtuacao IS NOT NULL " +
+           "AND UPPER(l.paisAtuacao) NOT LIKE '%NÃO INFORMADO%' AND UPPER(l.paisAtuacao) NOT LIKE '%NAO INFORMADO%' " +
+           "GROUP BY l.paisAtuacao ORDER BY COUNT(l) DESC")
+    List<ItemContagemDTO> contarTopPaisesAtuacaoDaUniversidade(@Param("universidade") String universidade);
 }

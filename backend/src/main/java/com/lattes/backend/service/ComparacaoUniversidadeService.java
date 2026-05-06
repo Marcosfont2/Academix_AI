@@ -30,9 +30,7 @@ public class ComparacaoUniversidadeService {
         this.lattesRepo = lattesRepo;
     }
 
-    public ComparacaoUniversidadeDTO obterDadosComparacao(String nomeUniversidade) {
-        
-        // Assíncrono
+public ComparacaoUniversidadeDTO obterDadosComparacao(String nomeUniversidade) {
         
         // --- OPENALEX ---
         CompletableFuture<List<InstituicaoOpenAlex>> openAlexOptFuture = CompletableFuture.supplyAsync(() -> 
@@ -40,14 +38,23 @@ public class ComparacaoUniversidadeService {
         );
 
         // --- CAPES ---
+        // Transforma "Universidade Federal de São Paulo" em "UNIVERSIDADE FEDERAL DE SÃO PAULO"
+        String nomeCapesProcessado = nomeUniversidade.toUpperCase();
+
         CompletableFuture<Long> totalDocentesFuture = CompletableFuture.supplyAsync(() -> 
-            capesRepo.contarTotalDocentesDaUniversidade(nomeUniversidade)
+            capesRepo.contarTotalDocentesDaUniversidade(nomeCapesProcessado)
         );
         CompletableFuture<List<ItemContagemDTO>> faixaEtariaFuture = CompletableFuture.supplyAsync(() -> 
-            capesRepo.contarDistribuicaoFaixaEtariaDaUniversidade(nomeUniversidade)
+            capesRepo.contarDistribuicaoFaixaEtariaDaUniversidade(nomeCapesProcessado)
         );
         CompletableFuture<List<ItemContagemDTO>> topAreasFuture = CompletableFuture.supplyAsync(() -> 
-            capesRepo.contarTopAreasAvaliacaoDaUniversidade(nomeUniversidade)
+            capesRepo.contarTopAreasAvaliacaoDaUniversidade(nomeCapesProcessado)
+        );
+        CompletableFuture<List<ItemContagemDTO>> grandesAreasFuture = CompletableFuture.supplyAsync(() -> 
+            capesRepo.contarTopGrandesAreasDaUniversidade(nomeCapesProcessado)
+        );
+        CompletableFuture<List<ItemContagemDTO>> conceitoFuture = CompletableFuture.supplyAsync(() -> 
+            capesRepo.contarDistribuicaoConceitoProgramaDaUniversidade(nomeCapesProcessado)
         );
 
         // --- LATTES ---
@@ -59,8 +66,11 @@ public class ComparacaoUniversidadeService {
         CompletableFuture<List<ItemContagemDTO>> topPaisesFuture = CompletableFuture.supplyAsync(() -> 
             lattesRepo.contarTopPaisesNascimentoDaUniversidade(nomeLattesProcessado)
         );
-        CompletableFuture<Long> retidosFuture = CompletableFuture.supplyAsync(() -> 
-            lattesRepo.contarRetidosNaMesmaInstituicao(nomeLattesProcessado)
+        CompletableFuture<List<ItemContagemDTO>> instituicoesAtuacaoFuture = CompletableFuture.supplyAsync(() -> 
+            lattesRepo.contarTopInstituicoesAtuacaoDaUniversidade(nomeLattesProcessado)
+        );
+        CompletableFuture<List<ItemContagemDTO>> paisesAtuacaoFuture = CompletableFuture.supplyAsync(() -> 
+            lattesRepo.contarTopPaisesAtuacaoDaUniversidade(nomeLattesProcessado)
         );
         CompletableFuture<List<ItemContagemDTO>> sexoBrutoFuture = CompletableFuture.supplyAsync(() -> 
             lattesRepo.contarDistribuicaoSexoDaUniversidade(nomeLattesProcessado)
@@ -69,7 +79,7 @@ public class ComparacaoUniversidadeService {
             lattesRepo.contarDistribuicaoRacaDaUniversidade(nomeLattesProcessado)
         );
         
-        // O .join() faz o código "esperar" até que os todos métodos assíncronos volte com o resultado.
+        // O .join() faz o código "esperar" até que todos os métodos assíncronos voltem com o resultado.
         List<InstituicaoOpenAlex> openAlexOpt = openAlexOptFuture.join();
         InstituicaoOpenAlex instituicao = openAlexOpt.isEmpty() ? null : openAlexOpt.get(0);
         Integer totalArtigos = (instituicao != null) ? instituicao.getWorksCount() : 0;
@@ -81,9 +91,6 @@ public class ComparacaoUniversidadeService {
         Long totalFormados = totalFormadosFuture.join();
         if (totalFormados == null) totalFormados = 0L;
 
-        Long retidos = retidosFuture.join();
-        if (retidos == null) retidos = 0L;
-
         // Calculamos a demografia aqui embaixo com os dados que já chegaram
         List<DemografiaDTO> distribuicaoSexo = calcularPorcentagemDemografia(sexoBrutoFuture.join());
         List<DemografiaDTO> distribuicaoRaca = calcularPorcentagemDemografia(racaBrutaFuture.join());
@@ -92,22 +99,15 @@ public class ComparacaoUniversidadeService {
             .nomeUniversidade(nomeUniversidade)
             .totalArtigos(totalArtigos)
             .totalCitacoes(totalCitacoes)
-            
             .totalDocentes(totalDocentes)
-            // TODO: Olhar se esses dois aparecem no frontend. Se sim, criar o cálculo de porcentagem aqui mesmo.
             .distribuicaoFaixaEtaria(faixaEtariaFuture.join())
             .topAreasAvaliacao(topAreasFuture.join())
-            // TODO: adicionar outras queries.
-            .topGrandesAreasConhecimento(List.of()) // FANTASMA 1: Fazer query de Grandes Áreas
-            .distribuicaoGrauPrograma(List.of())    // FANTASMA 2: Fazer query de Grau (Mestrado/Doutorado)
-            .distribuicaoConceitoPrograma(List.of()) // FANTASMA 3: Fazer query de Notas da Capes
-            
+            .topGrandesAreasConhecimento(grandesAreasFuture.join())
+            .distribuicaoConceitoPrograma(conceitoFuture.join())
             .totalFormados(totalFormados)
             .topPaisesNascimento(topPaisesFuture.join())
-            .distribuicaoRegiaoFormacao(List.of())  // FANTASMA 4: Fazer query de Região
-            .topInstituicoesAtuacao(List.of())      // FANTASMA 5: Fazer query de Instituição Atual
-            .distribuicaoSetorAtividade(List.of())  // FANTASMA 6: Fazer query de Setor Público/Privado
-            .distribuicaoEnquadramento(List.of())   // FANTASMA 7: Fazer query de Enquadramento
+            .topInstituicoesAtuacao(instituicoesAtuacaoFuture.join())
+            .topPaisesAtuacao(paisesAtuacaoFuture.join())
             .distribuicaoSexo(distribuicaoSexo)
             .distribuicaoRaca(distribuicaoRaca)
             .build();

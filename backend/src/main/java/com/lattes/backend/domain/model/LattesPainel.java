@@ -41,4 +41,7 @@ public class LattesPainel {
 
     @Column(name = "contagem_registro")
     private Long contagemRegistro;
+
+    @Column(name = "pais_atuacao")
+    private String paisAtuacao;
 }
